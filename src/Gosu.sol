@@ -79,19 +79,33 @@ contract Gosu is Ownable {
         require(game.state == GameState.RUNNING);
         if (game.player == winner) {
             games[gameId].state = GameState.PLAYER_WIN;
+            
+            //set stats of each player
+            statsPlayer[winner].win += 1;
+            statsPlayer[loser].defeat += 1;
+            
+            //events for leaderboard
+            emit Win(winner);
+            emit Lost(loser);
         }
         else if (game.opponent == winner) {
             games[gameId].state = GameState.OPPONENT_WIN;
+            
+            //set stats of each player
+            statsPlayer[winner].win += 1;
+            statsPlayer[loser].defeat += 1;
+            
+            //events for leaderboard
+            emit Win(winner);
+            emit Lost(loser);
         }
         else {
             games[gameId].state = GameState.DRAW;
+
+            statsPlayer[games[gameId].player].draw += 1;
+            statsPlayer[games[gameId].opponent].draw += 1;
+            emit DRAW(games[gameId].player, games[gameId].opponent);
         }
-        //set stats of each player
-        statsPlayer[winner].win += 1;
-        statsPlayer[loser].defeat += 1;
-        //events for leaderboard
-        emit Win(winner);
-        emit Lost(loser);
     }
 
     function claim(uint256 gameId) {
