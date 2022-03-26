@@ -32,69 +32,49 @@ contract Gosu is Ownable {
     mapping(address => uint256) public gains;
     mapping(address => uint) public currentGame;
     mapping(address => uint) public drawClaim;
-    uint limitTime;
+    uint256 limitTime = 1800;
 
     function createGame() public payable {
         Game[] storage games = gamesMapping[msg.sender];
         uint256 gameIndex = currentGame[msg.sender];
         if (games.length > gameIndex) {
-            //The player is already in a game but time run out so we cancel his current game and let him claim his bet back
-            if (games[gameIndex].state == GameState.RUNNING
-            && (block.timestamp - games[gameIndex].dateOfGame) > limitTime) {
-                drawClaim[msg.sender] = games[gameIndex].betAmount;
-                games[gameIndex].state = GameState.DRAW;
-            }
-            else {
-                require(games[gameIndex].state == GameState.OFF, "You already have an active game");
-            }
+            require(games[gameIndex].state != GameState.RUNNING, "You already have an active game");
         }
-        else {
-            Game memory newGame = Game(msg.value, msg.sender, address(0), block.timestamp, GameState.RUNNING);
-            games.push(newGame);
-        }
+        Game memory newGame = Game(msg.value, msg.sender, address(0), block.timestamp, GameState.RUNNING);
+        games.push(newGame);
     }
 
     // join a game
-    /*function joinGame(address opponent) public payable {   
-        uint256 curGameP1 = currentGame[opponent];
+    function joinGame(address firstPlayer) public payable {
+        Game[] storage gamesP1 = gamesMapping[firstPlayer];
+        Game[] storage gamesP2 = gamesMapping[msg.sender];
+        uint256 curGameP1 = currentGame[firstPlayer];
         uint256 curGameP2 = currentGame[msg.sender];
-
-        require(opponent != msg.sender, "not the same address in both parameters");
-        require(msg.value >= games[opponent][curGameP1].BetAmount, "not enough amount to bet");
-        require(games[opponent][curGameP1].inGame == false, "P1 already in game");
-        
-        if (games[msg.sender][curGameP2].inGame == true
-        && (block.timestamp - games[msg.sender][curGameP2].dateOfGame) > limitTime) {
-            drawClaim[msg.sender] = games[msg.sender][curGameP2].BetAmount;
-            games[msg.sender][curGameP2].inGame = false;
+        require(gamesP1[curGameP1].state == GameState.RUNNING, "Player doesn't have active game");
+        require(gamesP1[curGameP1].opponent == address(0), "Player already has an opponent");
+        require(gamesP1[curGameP1].betAmount == msg.value, "Bet amount isn't equal");
+        require(gamesP1[curGameP1].player != msg.sender, "Player is opponent");
+        //msg.sender shoud not be in another game
+        if (gamesP2.length > curGameP2) {
+            require(gamesP2[curGameP2].state != GameState.RUNNING, "Player already in a game");
         }
-        else {
-            require(games[msg.sender][curGameP2].inGame == false, "P2 is in game");
-        }
-
-        games[opponent][curGameP1].opponent = msg.sender;
-
-        games[msg.sender][curGameP2].player = msg.sender;
-        games[msg.sender][curGameP2].player = opponent;
-
-        games[opponent][curGameP1].dateOfGame = block.timestamp;
-        games[msg.sender][curGameP2].dateOfGame = block.timestamp;
-
-        games[opponent][curGameP1].inGame = true;
-        games[msg.sender][curGameP2].inGame = true;
-
+        gamesP1[curGameP1].opponent = msg.sender;
+        gamesP2.push(gamesP1[curGameP1]);
     }
 
+    
     function setWinner(address winner) public onlyOwner {
         //set winner states
-        gains[winner] += games[winner][currentGame[winner]].BetAmount * 2;
-        games[winner][currentGame[winner]].inGame = false;
-        currentGame[winner] += 1;
+        Game[] storage gamesP1 = gamesMapping[firstPlayer];
+        uint256 curGameP1 = currentGame[firstPlayer];
 
-        address loser = games[winner][currentGame[winner]].opponent;
-        games[loser][currentGame[loser]].inGame = false;
-        currentGame[loser] += 1;
-
-    }*/
+        Game storage curGame = gamesP1[curGameP1];
+        if (curGame.player == winner) {
+            curGame.state = GameState.PLAYER_WIN;
+        }
+        if (curGame.opponent == winner) {
+            curGame.state = GameState.OPPONENT_WIN;
+        }
+    }
 
 }

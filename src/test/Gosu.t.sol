@@ -112,4 +112,16 @@ contract ContractTest is DSTest, Gosu {
         myGosu.createGame{value: 5}();
         myGosu.createGame{value: 1}();
     }
+
+    function testCreateAndJoinGame() public {
+        CheatCodes cheats = CheatCodes(DSTest.HEVM_ADDRESS);
+
+        myGosu.createGame{value: 1}();
+        address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).call{value: 1}("");
+        cheats.prank(address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78));
+        myGosu.joinGame{value: 1}(address(this));
+
+        (uint256 betAmount, address player, address opponent, uint256 dateOfGame, GameState state) = myGosu.gamesMapping(address(this), 0);
+        DSTest.assertTrue(opponent == 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+    }
 }
