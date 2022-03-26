@@ -11,6 +11,10 @@ import "openzeppelin-contracts/contracts/access/Ownable.sol";
 
 contract Gosu is Ownable {
 
+    event Lost(address indexed loser);
+    event Win(address indexed winner);
+    event Draw(address indexed p1, address indexed p2);
+
     enum GameState {
         OFF,
         PLAYER_WIN,
@@ -65,9 +69,13 @@ contract Gosu is Ownable {
     }
 
     
-    function setWinner(uint256 gameId, address winner) public onlyOwner {
+    function setWinner(uint256 gameId, address winner, address loser) public onlyOwner {
         //set winner states
         require(games[gameId].state == GameState.RUNNING);
+
+        //events for leaderboard
+        emit Win(winner);
+        emit Lost(loser)
     }
 
 }
