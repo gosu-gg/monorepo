@@ -73,6 +73,9 @@ contract Gosu is Ownable {
         //set winner states
         require(games[gameId].state == GameState.RUNNING);
 
+        //set stats of each player
+        statsPlayer[winner].win += 1;
+        statsPlayer[loser].defeat += 1;
         //events for leaderboard
         emit Win(winner);
         emit Lost(loser)
