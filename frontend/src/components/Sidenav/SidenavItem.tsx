@@ -37,7 +37,8 @@ const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
 }));
 
 const SSidenavItemLink = styled(NavLink)`
-  background: #475259;
+  //background: #475259;
+  background: #2c2e32;
   border-radius: 10px;
   height: 45px;
   width: 45px;

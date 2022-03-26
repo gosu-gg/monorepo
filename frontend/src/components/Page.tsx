@@ -6,7 +6,7 @@ type Props = { children?: React.ReactNode; requireConnection: boolean };
 
 export default function Page(props: Props) {
   const { children, requireConnection } = props;
-  const connected = requireConnection ? false : true;
+  const connected = requireConnection ? true : true;
 
   return (
     <SPageContainer>
