@@ -89,4 +89,23 @@ contract ContractTest is DSTest, Gosu {
         (,,,,, state) = myGosu.games(myGosu.currentGame(address(this)));
         DSTest.assertTrue(state == GameState.PLAYER_WIN);
     }
+
+    function testClaim() public {
+        myGosu.createGame{value: 1}();
+        address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).call{value: 1}("");
+        address(address(myGosu)).call{value: 10000000000000000000000000}("");
+
+        cheats.startPrank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.joinGame{value: 1}(myGosu.currentGame(address(this)));
+        cheats.stopPrank();
+
+        myGosu.setWinner(0, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, address(this));
+        uint balanceBefore = address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).balance;
+        (, uint256 betAmount,,,,) = myGosu.games(myGosu.currentGame(address(this)));
+
+        cheats.prank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.claim(0);
+
+        DSTest.assertTrue(balanceBefore + betAmount * 2 == address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).balance);
+    }
 }
