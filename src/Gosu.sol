@@ -27,9 +27,15 @@ contract Gosu is Ownable {
         uint256 dateOfGame;
         GameState state;
     }
-    
+    struct PlayerStat {
+        uint win;
+        uint defeat;
+        uint draw;
+    }
+
     Game[] public games;
     mapping(address => uint) public currentGame;
+    mapping(address => PlayerStat) public statsPlayer; // oublie pas de set les stats des joueurs dans la fonction setWinner et/ou quand ya un draw dans les autres fonctions
     uint256 limitTime = 1800;
 
     function createGame() public payable {
