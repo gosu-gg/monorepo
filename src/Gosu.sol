@@ -39,7 +39,7 @@ contract Gosu is Ownable {
 
     Game[] public games;
     mapping(address => uint) public currentGame;
-    mapping(uint256 => bool[]) public hasClaimed; //0 is player and 1 opponent
+    mapping(uint256 => bool[2]) public hasClaimed; //0 is player and 1 opponent
     mapping(address => bool) public playedFirstGame;
     mapping(address => PlayerStat) public statsPlayer; // oublie pas de set les stats des joueurs dans la fonction setWinner et/ou quand ya un draw dans les autres fonctions
     uint256 limitTime = 1800;
@@ -134,12 +134,12 @@ contract Gosu is Ownable {
             if (game.player == msg.sender) {
                 require(hasClaimed[gameId][0] == false, "Already claimed");
                 hasClaimed[gameId][0] = true;
-                msg.sender.call{value: game.betAmount/2}("");
+                msg.sender.call{value: game.betAmount}("");
             }
             else if (game.opponent == msg.sender) {
                 require(hasClaimed[gameId][1] == false, "Already claimed");
                 hasClaimed[gameId][1] = true;
-                msg.sender.call{value: game.betAmount/2}("");
+                msg.sender.call{value: game.betAmount}("");
             }
             if (hasClaimed[gameId][0] && hasClaimed[gameId][1]) {
                 games[gameId].state = GameState.END;
@@ -147,7 +147,7 @@ contract Gosu is Ownable {
         }
         else if (game.state == GameState.PLAYER_WIN) {
             if (msg.sender == game.player) {
-                uint amount = game.betAmount;
+                uint amount = game.betAmount * 2;
                 (bool sent,) = payable(msg.sender).call{value: amount}("");
                 require(sent, "Couldn't claim");
                 games[gameId].state = GameState.END;

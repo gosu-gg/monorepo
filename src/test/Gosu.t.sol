@@ -119,10 +119,8 @@ contract ContractTest is DSTest, Gosu {
         myGosu.setWinner(0, address(0), address(0));
         uint balanceBefore = address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).balance;
         (, uint256 betAmount,,,,) = myGosu.games(myGosu.currentGame(address(this)));
-
         cheats.prank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
         myGosu.claim(0);
-
         DSTest.assertTrue(balanceBefore + betAmount == address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).balance);
     }
 }
