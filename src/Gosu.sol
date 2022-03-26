@@ -118,7 +118,7 @@ contract Gosu is Ownable {
         else if (game.state == GameState.PLAYER_WIN) {
             if (msg.sender == game.player) {
                 uint amount = game.betAmount;
-                (bool sent) = payable(msg.sender).call{value: amount}("");
+                (bool sent,) = payable(msg.sender).call{value: amount}("");
                 require(sent, "Couldn't claim");
                 games[gameId].state = GameState.END;
             }
