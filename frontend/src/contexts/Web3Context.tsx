@@ -1,8 +1,6 @@
 import * as React from "react";
 import Web3 from "web3";
-// import { RPC_URL } from "utils/chain_infos";
-
-export const RPC_URL = "https://api.avax.network/ext/bc/C/rpc";
+import { RPC_URL } from "../utils/chain_infos";
 
 type StateCommonProperties = { provider: Web3 };
 export type State = StateCommonProperties &

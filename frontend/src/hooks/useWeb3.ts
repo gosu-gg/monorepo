@@ -2,17 +2,35 @@ import * as React from "react";
 import Web3 from "web3";
 
 import { Dispatch, State, Web3Context } from "../contexts/Web3Context";
-// import {
-//   RPC_URL,
-//   SUPPORTED_CHAIN_ID,
-//   SUPPORTED_CHAIN_ID_STRING,
-//   SUPPORTED_CHAIN_NAME,
-// } from "../utils/chain_infos";
+import {
+  RPC_URL,
+  SUPPORTED_CHAIN_ID,
+  SUPPORTED_CHAIN_ID_STRING,
+  SUPPORTED_CHAIN_NAME,
+} from "../utils/chain_infos";
 
-export const RPC_URL = "https://api.avax.network/ext/bc/C/rpc";
-export const SUPPORTED_CHAIN_ID = 0xa86a;
-export const SUPPORTED_CHAIN_ID_STRING = "0xa86a";
-export const SUPPORTED_CHAIN_NAME = "Avalanche Network";
+import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
+// import WalletConnect from "@walletconnect/web3-provider";
+import Web3Modal from "web3modal";
+
+export const providerOptions = {
+  walletlink: {
+    package: CoinbaseWalletSDK,
+    options: {
+      appName: "Gosu",
+    },
+  },
+  // walletconnect: {
+  //   package: WalletConnect,
+  //   options: {
+  //     infuraId: process.env.INFURA_KEY,
+  //   },
+  // },
+};
+
+const web3Modal = new Web3Modal({
+  providerOptions, // required
+});
 
 // eslint-disable-next-line
 declare let window: any;
@@ -24,7 +42,7 @@ type ReturnType = {
   web3State: State;
 };
 
-const useWeb3 = (perform = false): ReturnType => {
+const useWeb3 = (): ReturnType => {
   const context = React.useContext(Web3Context);
   if (context === undefined)
     throw new Error("useWeb3 must be used within a Web3Provider");
@@ -34,14 +52,17 @@ const useWeb3 = (perform = false): ReturnType => {
   const connectWallet = async () => {
     if (window.ethereum && !web3State.walletConnected) {
       try {
-        await window.ethereum.request({ method: "eth_requestAccounts" });
-        let provider = new Web3(window.ethereum);
+        // await window.ethereum.request({ method: "eth_requestAccounts" });
+        const test = await web3Modal.connect();
+        let provider = new Web3(test);
+        // let provider = new Web3(window.ethereum);
         const accounts = await provider.eth.getAccounts();
         const address = accounts[0];
         const chainId = await provider.eth.getChainId();
         const rightChainId = chainId === SUPPORTED_CHAIN_ID;
         provider = rightChainId
-          ? new Web3(window.ethereum)
+          ? // ? new Web3(window.ethereum)
+            new Web3(test)
           : new Web3(new Web3.providers.HttpProvider(RPC_URL));
 
         setWeb3State({
@@ -113,12 +134,6 @@ const useWeb3 = (perform = false): ReturnType => {
     }
     return;
   };
-
-  React.useEffect(() => {
-    perform && connectWallet();
-
-    // eslint-disable-next-line
-  }, [perform]);
 
   return { connectWallet, web3State, switchToRightNetwork, setWeb3State };
 };
