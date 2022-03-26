@@ -30,6 +30,7 @@ contract Gosu is Ownable {
     
     Game[] public games;
     mapping(address => uint) public currentGame;
+    mapping(address => bool) public playedFirstGame;
     uint256 limitTime = 1800;
 
     function createGame() public payable {
@@ -39,6 +40,7 @@ contract Gosu is Ownable {
         }
         Game memory newGame = Game(games.length, msg.value, msg.sender, address(0), block.timestamp, GameState.RUNNING);
         games.push(newGame);
+        playedFirstGame[msg.sender] = true;
         currentGame[msg.sender] = games.length - 1;
     }
 
@@ -51,10 +53,11 @@ contract Gosu is Ownable {
         require(game.betAmount == msg.value, "Bet amount isn't equal");
         require(game.player != msg.sender, "Player is opponent");
         //msg.sender shoud not be in another game
-        if (games.length > curGameP2) {
+        if (games.length > curGameP2 && playedFirstGame[msg.sender]) {
             require(games[curGameP2].state != GameState.RUNNING, "Player already in a game");
         }
         game.opponent = msg.sender;
+        playedFirstGame[msg.sender] = true;
         currentGame[msg.sender] = gameId;
     }
 
