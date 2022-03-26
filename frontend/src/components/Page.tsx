@@ -17,6 +17,7 @@ export default function Page(props: Props) {
           <NotConnectedTitle>
             You need to connect your wallet to enjoy the GOSU experience !
           </NotConnectedTitle>
+          <button>Connect</button>
         </NotConnectedContainer>
       )}
     </SPageContainer>
