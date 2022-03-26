@@ -19,8 +19,8 @@ contract Gosu is Ownable {
         DRAW,
         END
     }
-
     struct Game {
+        uint256 id;
         uint256 betAmount;
         address player;
         address opponent;
@@ -28,53 +28,40 @@ contract Gosu is Ownable {
         GameState state;
     }
     
-    mapping(address => Game[]) public gamesMapping;
-    mapping(address => uint256) public gains;
+    Game[] public games;
     mapping(address => uint) public currentGame;
-    mapping(address => uint) public drawClaim;
     uint256 limitTime = 1800;
 
     function createGame() public payable {
-        Game[] storage games = gamesMapping[msg.sender];
         uint256 gameIndex = currentGame[msg.sender];
         if (games.length > gameIndex) {
             require(games[gameIndex].state != GameState.RUNNING, "You already have an active game");
         }
-        Game memory newGame = Game(msg.value, msg.sender, address(0), block.timestamp, GameState.RUNNING);
+        Game memory newGame = Game(games.length, msg.value, msg.sender, address(0), block.timestamp, GameState.RUNNING);
         games.push(newGame);
+        currentGame[msg.sender] = games.length - 1;
     }
 
     // join a game
-    function joinGame(address firstPlayer) public payable {
-        Game[] storage gamesP1 = gamesMapping[firstPlayer];
-        Game[] storage gamesP2 = gamesMapping[msg.sender];
-        uint256 curGameP1 = currentGame[firstPlayer];
+    function joinGame(uint256 gameId) public payable {
+        Game storage game = games[gameId];
         uint256 curGameP2 = currentGame[msg.sender];
-        require(gamesP1[curGameP1].state == GameState.RUNNING, "Player doesn't have active game");
-        require(gamesP1[curGameP1].opponent == address(0), "Player already has an opponent");
-        require(gamesP1[curGameP1].betAmount == msg.value, "Bet amount isn't equal");
-        require(gamesP1[curGameP1].player != msg.sender, "Player is opponent");
+        require(game.state == GameState.RUNNING, "Player doesn't have active game");
+        require(game.opponent == address(0), "Player already has an opponent");
+        require(game.betAmount == msg.value, "Bet amount isn't equal");
+        require(game.player != msg.sender, "Player is opponent");
         //msg.sender shoud not be in another game
-        if (gamesP2.length > curGameP2) {
-            require(gamesP2[curGameP2].state != GameState.RUNNING, "Player already in a game");
+        if (games.length > curGameP2) {
+            require(games[curGameP2].state != GameState.RUNNING, "Player already in a game");
         }
-        gamesP1[curGameP1].opponent = msg.sender;
-        gamesP2.push(gamesP1[curGameP1]);
+        game.opponent = msg.sender;
+        currentGame[msg.sender] = gameId;
     }
 
     
-    function setWinner(address winner) public onlyOwner {
+    function setWinner(uint256 gameId, address winner) public onlyOwner {
         //set winner states
-        Game[] storage gamesP1 = gamesMapping[firstPlayer];
-        uint256 curGameP1 = currentGame[firstPlayer];
-
-        Game storage curGame = gamesP1[curGameP1];
-        if (curGame.player == winner) {
-            curGame.state = GameState.PLAYER_WIN;
-        }
-        if (curGame.opponent == winner) {
-            curGame.state = GameState.OPPONENT_WIN;
-        }
+        require(games[gameId].state == GameState.RUNNING);
     }
 
 }
