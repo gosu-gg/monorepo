@@ -89,6 +89,7 @@ contract Gosu is Ownable {
         if (games.length > curGameP2 && playedFirstGame[msg.sender]) {
             require(games[curGameP2].state != GameState.RUNNING, "Player already in a game");
         }
+        game.dateOfGame = block.timestamp;
         game.opponent = msg.sender;
         playedFirstGame[msg.sender] = true;
         currentGame[msg.sender] = gameId;
@@ -109,9 +110,23 @@ contract Gosu is Ownable {
         }
         else if (game.player == winner) {
             games[gameId].state = GameState.PLAYER_WIN;
+            
+            //set stats of each player
+            statsPlayer[winner].win += 1;
+            statsPlayer[loser].defeat += 1;
+            //events for leaderboard
+            emit Win(winner);
+            emit Lost(loser);
         }
         else if (game.opponent == winner) {
             games[gameId].state = GameState.OPPONENT_WIN;
+            
+            //set stats of each player
+            statsPlayer[winner].win += 1;
+            statsPlayer[loser].defeat += 1;
+            //events for leaderboard
+            emit Win(winner);
+            emit Lost(loser);
         }
         else {
             games[gameId].state = GameState.DRAW;
@@ -120,12 +135,6 @@ contract Gosu is Ownable {
             statsPlayer[games[gameId].opponent].draw += 1;
             emit Draw(games[gameId].player, games[gameId].opponent);
         }
-        //set stats of each player
-        statsPlayer[winner].win += 1;
-        statsPlayer[loser].defeat += 1;
-        //events for leaderboard
-        emit Win(winner);
-        emit Lost(loser);
     }
 
     function claim(uint256 gameId) public {

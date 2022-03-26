@@ -90,6 +90,24 @@ contract ContractTest is DSTest, Gosu {
         DSTest.assertTrue(state == GameState.PLAYER_WIN);
     }
 
+    function testCreateAndTimeOver() public {
+        myGosu.createGame{value: 1}();
+        address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).call{value: 1}("");
+        cheats.startPrank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.joinGame{value: 1}(myGosu.currentGame(address(this)));
+        cheats.stopPrank();
+
+        uint timeNow = block.timestamp;
+        cheats.warp(timeNow + 1801);
+
+        myGosu.createGame{value: 1}();
+        (,,,,, GameState state) = myGosu.games(myGosu.currentGame(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78));
+        DSTest.assertTrue(state == GameState.DRAW);
+        (,,,,,state) = myGosu.games(myGosu.currentGame(address(this)) - 1);
+        DSTest.assertTrue(state == GameState.DRAW);
+        
+    }
+
     function testClaim() public {
         myGosu.createGame{value: 1}();
         address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).call{value: 1}("");
@@ -123,4 +141,119 @@ contract ContractTest is DSTest, Gosu {
         myGosu.claim(0);
         DSTest.assertTrue(balanceBefore + betAmount == address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).balance);
     }
+
+    function testStatsPlayersWinDefeat() public {
+        myGosu.createGame{value: 1}();
+        address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).call{value: 1}("");
+        cheats.startPrank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.joinGame{value: 1}(myGosu.currentGame(address(this)));
+        cheats.stopPrank();
+
+        myGosu.setWinner(0, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, address(this));
+        (,,,,, GameState state) = myGosu.games(myGosu.currentGame(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78));
+        DSTest.assertTrue(state == GameState.OPPONENT_WIN);
+        (,,,,,state) = myGosu.games(myGosu.currentGame(address(this)));
+        DSTest.assertTrue(state == GameState.OPPONENT_WIN);
+        
+        (uint win, uint defeat, uint draw) = myGosu.statsPlayer(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        DSTest.assertTrue(win == 1);
+        DSTest.assertTrue(defeat == 0);
+        DSTest.assertTrue(draw == 0);
+
+        (win, defeat, draw) = myGosu.statsPlayer(address(this));
+        DSTest.assertTrue(win == 0);
+        DSTest.assertTrue(defeat == 1);
+        DSTest.assertTrue(draw == 0);
+        
+    }
+
+    function testStatsPlayersDraw() public {
+        myGosu.createGame{value: 1}();
+        address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).call{value: 1}("");
+
+        cheats.startPrank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.joinGame{value: 1}(myGosu.currentGame(address(this)));
+        cheats.stopPrank();
+
+        myGosu.setWinner(0, address(0), address(0));
+        
+        (uint win, uint defeat, uint draw) = myGosu.statsPlayer(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        DSTest.assertTrue(win == 0);
+        DSTest.assertTrue(defeat == 0);
+        DSTest.assertTrue(draw == 1);
+
+        (win, defeat, draw) = myGosu.statsPlayer(address(this));
+        DSTest.assertTrue(win == 0);
+        DSTest.assertTrue(defeat == 0);
+        DSTest.assertTrue(draw == 1);
+        
+    }
+
+    function testStatsPlayers2Draw() public {
+        myGosu.createGame{value: 1}();
+        address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).call{value: 1}("");
+
+        cheats.startPrank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.joinGame{value: 1}(myGosu.currentGame(address(this)));
+        cheats.stopPrank();
+
+        myGosu.setWinner(0, address(0), address(0));
+        
+        (uint win, uint defeat, uint draw) = myGosu.statsPlayer(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        DSTest.assertTrue(win == 0);
+        DSTest.assertTrue(defeat == 0);
+        DSTest.assertTrue(draw == 1);
+
+        (win, defeat, draw) = myGosu.statsPlayer(address(this));
+        DSTest.assertTrue(win == 0);
+        DSTest.assertTrue(defeat == 0);
+        DSTest.assertTrue(draw == 1);
+
+        myGosu.createGame{value: 1}();
+        address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).call{value: 1}("");
+
+        cheats.startPrank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.joinGame{value: 1}(myGosu.currentGame(address(this)));
+        cheats.stopPrank();
+
+        myGosu.setWinner(1, address(0), address(0));
+        
+        (win, defeat, draw) = myGosu.statsPlayer(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        DSTest.assertTrue(win == 0);
+        DSTest.assertTrue(defeat == 0);
+        DSTest.assertTrue(draw == 2);
+
+        (win, defeat, draw) = myGosu.statsPlayer(address(this));
+        DSTest.assertTrue(win == 0);
+        DSTest.assertTrue(defeat == 0);
+        DSTest.assertTrue(draw == 2);
+    }
+
+    function testStatsPlayerLimitTimeDraw() public {
+        myGosu.createGame{value: 1}();
+        address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).call{value: 1}("");
+
+        cheats.startPrank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.joinGame{value: 1}(myGosu.currentGame(address(this)));
+        cheats.stopPrank();
+
+        uint timeNow = block.timestamp;
+        cheats.warp(timeNow + 1801);
+
+        myGosu.createGame{value: 1}();
+        
+        (uint win, uint defeat, uint draw) = myGosu.statsPlayer(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        DSTest.assertTrue(win == 0);
+        DSTest.assertTrue(defeat == 0);
+        DSTest.assertTrue(draw == 1);
+
+        (win, defeat, draw) = myGosu.statsPlayer(address(this));
+        DSTest.assertTrue(win == 0);
+        DSTest.assertTrue(defeat == 0);
+        DSTest.assertTrue(draw == 1);
+        
+    }
+
+
+    
 }
