@@ -12,7 +12,7 @@ function App() {
   const { connectWallet } = useWeb3();
 
   React.useEffect(() => {
-    // connectWallet();
+    connectWallet();
   }, []);
   return (
     <>
