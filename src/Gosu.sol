@@ -48,13 +48,13 @@ contract Gosu is Ownable {
         uint256 gameIndex = currentGame[msg.sender];
 
         //CHECK IF LAST GAME IS A DRAW BY LIMIT OF TIME
-        if(games[gameIndex].state == GameState.RUNNING
+        if(gameIndex < games.length && games[gameIndex].state == GameState.RUNNING
         && games[gameIndex].dateOfGame + limitTime < block.timestamp) {
-            games[gameIndex].state = DRAW;
+            games[gameIndex].state = GameState.DRAW;
             
             statsPlayer[games[gameIndex].player].draw += 1;
             statsPlayer[games[gameIndex].opponent].draw += 1;
-            emit DRAW(games[gameIndex].player, games[gameIndex].opponent);
+            emit Draw(games[gameIndex].player, games[gameIndex].opponent);
         }
 
         if (games.length > gameIndex) {
@@ -72,13 +72,13 @@ contract Gosu is Ownable {
         uint256 curGameP2 = currentGame[msg.sender];
 
         //CHECK IF LAST GAME IS A DRAW BY LIMIT OF TIME
-        if(games[curGameP2].state == GameState.RUNNING
+        if(curGameP2 < games.length && games[curGameP2].state == GameState.RUNNING
         && games[curGameP2].dateOfGame + limitTime < block.timestamp) {
-            games[curGameP2].state = DRAW;
+            games[curGameP2].state = GameState.DRAW;
             
             statsPlayer[games[curGameP2].player].draw += 1;
             statsPlayer[games[curGameP2].opponent].draw += 1;
-            emit DRAW(games[curGameP2].player, games[curGameP2].opponent);
+            emit Draw(games[curGameP2].player, games[curGameP2].opponent);
         }
 
         require(game.state == GameState.RUNNING, "Player doesn't have active game");
@@ -101,11 +101,11 @@ contract Gosu is Ownable {
         require(game.state == GameState.RUNNING);
 
         if (game.dateOfGame + limitTime < block.timestamp) {
-            games[gameId].state = DRAW;
+            games[gameId].state = GameState.DRAW;
             
             statsPlayer[games[gameId].player].draw += 1;
             statsPlayer[games[gameId].opponent].draw += 1;
-            emit DRAW(games[gameId].player, games[gameId].opponent);
+            emit Draw(games[gameId].player, games[gameId].opponent);
         }
         else if (game.player == winner) {
             games[gameId].state = GameState.PLAYER_WIN;
@@ -134,38 +134,8 @@ contract Gosu is Ownable {
 
             statsPlayer[games[gameId].player].draw += 1;
             statsPlayer[games[gameId].opponent].draw += 1;
-            emit DRAW(games[gameId].player, games[gameId].opponent);
+            emit Draw(games[gameId].player, games[gameId].opponent);
         }
     }
 
-    function claim(uint256 gameId) {
-        Game memory game = games[gameId];
-        if (game.state == GameState.DRAW) {
-            if (game.player == msg.sender) {
-                require(hasClaimed[gameId][0] == false, "Already claimed");
-                hasClaimed[gameId][0] = true;
-                (msg.sender).call{value: game.betAmount/2}("");
-            }
-            else if (game.opponent == msg.sender) {
-                require(hasClaimed[gameId][1] == false, "Already claimed");
-                hasClaimed[gameId][1] = true;
-                (msg.sender).call{value: game.betAmount/2}("");
-            }
-            if (hasClaimed[gameId][0] && hasClaimed[gameId][1]) {
-                games[gameId] = GameState.END;
-            }
-        }
-        else if (game.state == GameState.PLAYER_WIN) {
-            if (msg.sender == game.player) {
-                (msg.sender).call{value: game.betAmount}("");
-                games[gameId] = GameState.END;
-            }
-        }
-        else if (game.state == GameState.OPPONENT_WIN) {
-            if (msg.sender == game.opponent) {
-                (msg.sender).call{value: game.betAmount}("");
-                games[gameId] = GameState.END;
-            }
-        }
-    }
 }
