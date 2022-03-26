@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { SIDENAV_MARGIN } from "./Sidenav";
+import { SIDENAV_MARGIN } from "./Sidenav/Sidenav";
 
 type Props = { children?: React.ReactNode };
 

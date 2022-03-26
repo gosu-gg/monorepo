@@ -1,7 +1,10 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import Sidenav from "./components/Sidenav";
+import Sidenav from "./components/Sidenav/Sidenav";
+import Battle from "./pages/Battle";
 import Home from "./pages/Home";
+import Leaderboard from "./pages/Leaderboard";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -9,6 +12,9 @@ function App() {
       <Sidenav />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/battle" element={<Battle />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </>
   );
