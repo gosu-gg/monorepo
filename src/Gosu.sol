@@ -79,7 +79,7 @@ contract Gosu is Ownable {
         require(game.state == GameState.RUNNING);
 
         if (game.dateOfGame + limitTime < block.timestamp) {
-            games[gameId].state = DRAW;
+            games[gameId].state = GameState.DRAW;
         }
         else if (game.player == winner) {
             games[gameId].state = GameState.PLAYER_WIN;
@@ -98,33 +98,37 @@ contract Gosu is Ownable {
         emit Lost(loser);
     }
 
-    function claim(uint256 gameId) {
+    function claim(uint256 gameId) public {
         Game memory game = games[gameId];
         if (game.state == GameState.DRAW) {
             if (game.player == msg.sender) {
                 require(hasClaimed[gameId][0] == false, "Already claimed");
                 hasClaimed[gameId][0] = true;
-                (msg.sender).call{value: game.betAmount/2}("");
+                msg.sender.call{value: game.betAmount/2}("");
             }
             else if (game.opponent == msg.sender) {
                 require(hasClaimed[gameId][1] == false, "Already claimed");
                 hasClaimed[gameId][1] = true;
-                (msg.sender).call{value: game.betAmount/2}("");
+                msg.sender.call{value: game.betAmount/2}("");
             }
             if (hasClaimed[gameId][0] && hasClaimed[gameId][1]) {
-                games[gameId] = GameState.END;
+                games[gameId].state = GameState.END;
             }
         }
         else if (game.state == GameState.PLAYER_WIN) {
             if (msg.sender == game.player) {
-                (msg.sender).call{value: game.betAmount}("");
-                games[gameId] = GameState.END;
+                uint amount = game.betAmount;
+                (bool sent) = payable(msg.sender).call{value: amount}("");
+                require(sent, "Couldn't claim");
+                games[gameId].state = GameState.END;
             }
         }
         else if (game.state == GameState.OPPONENT_WIN) {
             if (msg.sender == game.opponent) {
-                (msg.sender).call{value: game.betAmount}("");
-                games[gameId] = GameState.END;
+                uint amount = game.betAmount * 2;
+                (bool sent,) = msg.sender.call{value: amount}("");
+                require(sent, "Couldn't claim");
+                games[gameId].state = GameState.END;
             }
         }
     }
