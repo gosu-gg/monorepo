@@ -107,4 +107,22 @@ contract ContractTest is DSTest, Gosu {
 
         DSTest.assertTrue(balanceBefore + betAmount * 2 == address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).balance);
     }
+
+    function testClaimDraw() public {
+        myGosu.createGame{value: 1}();
+        address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).call{value: 1}("");
+
+        cheats.startPrank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.joinGame{value: 1}(myGosu.currentGame(address(this)));
+        cheats.stopPrank();
+
+        myGosu.setWinner(0, address(0), address(0));
+        uint balanceBefore = address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).balance;
+        (, uint256 betAmount,,,,) = myGosu.games(myGosu.currentGame(address(this)));
+
+        cheats.prank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.claim(0);
+
+        DSTest.assertTrue(balanceBefore + betAmount == address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).balance);
+    }
 }
