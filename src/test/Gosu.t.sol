@@ -93,7 +93,6 @@ contract ContractTest is DSTest, Gosu {
     function testClaim() public {
         myGosu.createGame{value: 1}();
         address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).call{value: 1}("");
-        address(address(myGosu)).call{value: 10000000000000000000000000}("");
 
         cheats.startPrank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
         myGosu.joinGame{value: 1}(myGosu.currentGame(address(this)));
