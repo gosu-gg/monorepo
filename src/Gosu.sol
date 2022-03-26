@@ -11,6 +11,10 @@ import "openzeppelin-contracts/contracts/access/Ownable.sol";
 
 contract Gosu is Ownable {
 
+    event Lost(address indexed loser);
+    event Win(address indexed winner);
+    event Draw(address indexed p1, address indexed p2);
+
     enum GameState {
         OFF,
         PLAYER_WIN,
@@ -27,10 +31,16 @@ contract Gosu is Ownable {
         uint256 dateOfGame;
         GameState state;
     }
-    
+    struct PlayerStat {
+        uint win;
+        uint defeat;
+        uint draw;
+    }
+
     Game[] public games;
     mapping(address => uint) public currentGame;
     mapping(address => bool) public playedFirstGame;
+    mapping(address => PlayerStat) public statsPlayer; // oublie pas de set les stats des joueurs dans la fonction setWinner et/ou quand ya un draw dans les autres fonctions
     uint256 limitTime = 1800;
 
     function createGame() public payable {
@@ -62,9 +72,16 @@ contract Gosu is Ownable {
     }
 
     
-    function setWinner(uint256 gameId, address winner) public onlyOwner {
+    function setWinner(uint256 gameId, address winner, address loser) public onlyOwner {
         //set winner states
         require(games[gameId].state == GameState.RUNNING);
+
+        //set stats of each player
+        statsPlayer[winner].win += 1;
+        statsPlayer[loser].defeat += 1;
+        //events for leaderboard
+        emit Win(winner);
+        emit Lost(loser);
     }
 
 }
