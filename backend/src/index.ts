@@ -2,7 +2,7 @@ import express, { Express } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
-import getClashBattleLog from "./helpers";
+import getClashBattleLog, { setWinners } from "./helpers";
 
 dotenv.config();
 
@@ -20,6 +20,7 @@ app.get("/", (_, res) => {
 });
 
 app.get("/battle-result", async (_, res) => {
-  const data = await getClashBattleLog("%23PUPP8LPV");
-  res.send(data);
+  //const data = await getClashBattleLog("%23PUPP8LPV");
+  await setWinners();
+  res.send('DONE');
 });
