@@ -67,12 +67,13 @@ const useWeb3 = (): ReturnType => {
           rightChainId,
         });
 
-        window.ethereum.on("chainChanged", (chainId: string) => {
+        test.on("chainChanged", (chainId: string) => {
           const rightChainId = parseInt(chainId, 16) === SUPPORTED_CHAIN_ID;
           const provider = rightChainId
-            ? new Web3(window.ethereum)
+            ? new Web3(test)
             : new Web3(new Web3.providers.HttpProvider(RPC_URL));
 
+            console.log(rightChainId)
           setWeb3State((prevWeb3State) => {
             return prevWeb3State.walletConnected
               ? { ...prevWeb3State, provider, rightChainId }
@@ -80,7 +81,7 @@ const useWeb3 = (): ReturnType => {
           });
         });
 
-        window.ethereum.on("accountsChanged", (accounts: Array<string>) => {
+        test.on("accountsChanged", (accounts: Array<string>) => {
           const address = accounts[0];
           if (!address) {
             setWeb3State({
@@ -96,6 +97,36 @@ const useWeb3 = (): ReturnType => {
               : prevWeb3State
           );
         });
+
+        // window.ethereum.on("chainChanged", (chainId: string) => {
+        //   const rightChainId = parseInt(chainId, 16) === SUPPORTED_CHAIN_ID;
+        //   const provider = rightChainId
+        //     ? new Web3(window.ethereum)
+        //     : new Web3(new Web3.providers.HttpProvider(RPC_URL));
+
+        //   setWeb3State((prevWeb3State) => {
+        //     return prevWeb3State.walletConnected
+        //       ? { ...prevWeb3State, provider, rightChainId }
+        //       : prevWeb3State;
+        //   });
+        // });
+
+        // window.ethereum.on("accountsChanged", (accounts: Array<string>) => {
+        //   const address = accounts[0];
+        //   if (!address) {
+        //     setWeb3State({
+        //       provider: new Web3(new Web3.providers.HttpProvider(RPC_URL)),
+        //       walletConnected: false,
+        //     });
+        //     return;
+        //   }
+
+        //   setWeb3State((prevWeb3State) =>
+        //     prevWeb3State.walletConnected
+        //       ? { ...prevWeb3State, address }
+        //       : prevWeb3State
+        //   );
+        // });
       } catch (error) {
         console.log("Website connection rejected");
       }

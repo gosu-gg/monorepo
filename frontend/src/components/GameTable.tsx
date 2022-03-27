@@ -42,7 +42,7 @@ export default function GameTable({ tableType }: Props) {
 
     (async () => {
       try {
-        const length = 10;
+        const length = 11;
         const promisesArray: Array<Promise<unknown>> = [];
         for (let i = 0; i < length; i++) {
           promisesArray.push(await contract.methods.games(i.toString()).call());
