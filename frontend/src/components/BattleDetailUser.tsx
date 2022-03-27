@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 type Props = {
   address: string | undefined;
-  status: "winner" | "looser" | "waiting";
+  status: "winner" | "loser" | "waiting";
 };
 
 export default function BattleDetailUser(props: Props) {
