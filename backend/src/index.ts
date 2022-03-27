@@ -2,7 +2,7 @@ import express, { Express } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
-import setGameResult, { getGameFromContract, setWinners } from "./helpers";
+import setGameResult, { getGameFromContract } from "./helpers";
 
 dotenv.config();
 
@@ -11,7 +11,7 @@ const port = process.env.PORT || 8080;
 
 const corsOptions = process.env.NODE_ENV === 'production' ? {} : { origin: "*" };
 
-app.use(cors({origin: '*'}), helmet(), express.json());
+app.use(cors(corsOptions), helmet(), express.json());
 app.listen(port, () => console.log(`it's alive on http://localhost:${port}`));
 
 app.get("/", (_, res) => {
