@@ -19,17 +19,10 @@ export const providerOptions = {
       appName: "Gosu",
     },
   },
-  injected: {
-    display: {
-      // name: "Injected",
-      description: "Connect with the provider in your Browser roxiei",
-    },
-    package: null,
-  },
 };
 
 const web3Modal = new Web3Modal({
-  cacheProvider: true,
+  // cacheProvider: true,
   providerOptions, // required
   theme: "dark",
 });

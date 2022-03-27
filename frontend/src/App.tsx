@@ -12,6 +12,7 @@ function App() {
   return (
     <>
       <Sidenav />
+      {/* GOSU */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/battle" element={<Battle />} />
