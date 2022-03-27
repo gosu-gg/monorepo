@@ -3,12 +3,13 @@ import styled from "styled-components";
 
 type Props = {
   children: React.ReactNode;
+  className?: string;
   loading: boolean;
 };
 
 export default function LoaderWrapper(props: Props) {
-  const { children, loading } = props;
-  return <>{loading ? <SSpinningLoader /> : children}</>;
+  const { children, className, loading } = props;
+  return <>{loading ? <SSpinningLoader className={className} /> : children}</>;
 }
 
 const SSpinningLoader = styled.div`

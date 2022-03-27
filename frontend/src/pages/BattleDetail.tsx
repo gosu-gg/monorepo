@@ -34,7 +34,6 @@ export default function BattleDetail() {
     (async () => {
       try {
         const game = await contract.methods.games(battleId).call();
-        console.log(game.state);
         const player1Status =
           game.state === "1"
             ? "winner"
@@ -84,6 +83,19 @@ export default function BattleDetail() {
     setLoading(false);
   };
 
+  const finishGame = async () => {
+    fetch("http://localhost:8080/battle-result", {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+      body: JSON.stringify({ gameId: parseInt(battleId || "") }),
+    })
+      .then((response) => response.text())
+      .then((data) => console.log(data));
+  };
+
   return (
     <Page requireConnection={false}>
       <SContainer>
@@ -114,6 +126,26 @@ export default function BattleDetail() {
             >
               <SButton onClick={cancelGame}>
                 <LoaderWrapper loading={loading}>Cancel</LoaderWrapper>
+              </SButton>
+            </div>
+          )}
+
+        {gameData.state === "3" &&
+          gameData.player2 !== "0x0000000000000000000000000000000000000000" &&
+          (web3State.walletConnected
+            ? gameData.player1 === web3State.address ||
+              gameData.player2 === web3State.address
+            : false) && (
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "2rem",
+              }}
+            >
+              <SButton onClick={finishGame}>
+                <LoaderWrapper loading={loading}>Finish game</LoaderWrapper>
               </SButton>
             </div>
           )}
