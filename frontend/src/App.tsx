@@ -9,11 +9,6 @@ import Leaderboard from "./pages/Leaderboard";
 import Profile from "./pages/Profile";
 
 function App() {
-  const { connectWallet } = useWeb3();
-
-  React.useEffect(() => {
-    connectWallet();
-  }, []);
   return (
     <>
       <Sidenav />

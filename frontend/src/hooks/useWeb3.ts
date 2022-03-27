@@ -10,7 +10,6 @@ import {
 } from "../utils/chain_infos";
 
 import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
-// import WalletConnect from "@walletconnect/web3-provider";
 import Web3Modal from "web3modal";
 
 export const providerOptions = {
@@ -20,16 +19,19 @@ export const providerOptions = {
       appName: "Gosu",
     },
   },
-  // walletconnect: {
-  //   package: WalletConnect,
-  //   options: {
-  //     infuraId: process.env.INFURA_KEY,
-  //   },
-  // },
+  injected: {
+    display: {
+      // name: "Injected",
+      description: "Connect with the provider in your Browser roxiei",
+    },
+    package: null,
+  },
 };
 
 const web3Modal = new Web3Modal({
+  cacheProvider: true,
   providerOptions, // required
+  theme: "dark",
 });
 
 // eslint-disable-next-line
