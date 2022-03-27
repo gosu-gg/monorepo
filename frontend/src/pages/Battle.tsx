@@ -2,7 +2,7 @@ import Page from "../components/Page";
 import styled from "styled-components";
 
 import CreateGame from "../components/CreateGame";
-import CurrentLobbies from "../components/CurrentLobbies";
+import GameTable from "../components/GameTable";
 import { SIDENAV_MARGIN } from "../components/Sidenav/Sidenav";
 import { useEffect } from "react";
 
@@ -18,7 +18,7 @@ export default function Battle() {
           <CreateGame />
         </SLeftContainer>
         <SRightContainer>
-          <CurrentLobbies />
+          <GameTable tableType="currentLobbies" />
         </SRightContainer>
       </SPageContainer>
     </Page>

@@ -5,7 +5,11 @@ import { walletAddressShortener } from "../helpers/helpers";
 import ClashRoyaleLogo from "../../assets/clash-royale-icon.png";
 import AvaxLogo from "../../assets/avalanche-avax-logo.png";
 
-export default function CurrentLobbies() {
+type Props = {
+  tableType: "currentLobbies" | "lastResults";
+};
+
+export default function GameTable({ tableType }: Props) {
   return (
     <SLobbiesTable>
       <thead>
@@ -14,7 +18,9 @@ export default function CurrentLobbies() {
           <SLobbyHeader>Player 1</SLobbyHeader>
           <SLobbyHeader>Player 2</SLobbyHeader>
           <SLobbyHeader>Bet Amount</SLobbyHeader>
-          <SLobbyHeader>Status</SLobbyHeader>
+          <SLobbyHeader>
+            {tableType === "currentLobbies" ? "Status" : "Result"}
+          </SLobbyHeader>
         </tr>
       </thead>
       <tbody>
@@ -42,11 +48,19 @@ export default function CurrentLobbies() {
             </SGameDiv>
           </SLobbyTd>
           <SLobbyTd color="#FDDA0D">
-            <SGameStatusChip
-              background="#feec86"
-              customcolor="#caae0a"
-              label="Waiting for players"
-            />
+            {tableType === "currentLobbies" ? (
+              <SGameStatusChip
+                background="#feec86"
+                customcolor="#caae0a"
+                label="Waiting for players"
+              />
+            ) : (
+              <SGameStatusChip
+                background="#e68f94"
+                customcolor="#d2363e"
+                label="Defeat"
+              />
+            )}
           </SLobbyTd>
         </tr>
         <tr>
@@ -73,11 +87,19 @@ export default function CurrentLobbies() {
             </SGameDiv>
           </SLobbyTd>
           <SLobbyTd>
-            <SGameStatusChip
-              background="#feec86"
-              customcolor="#caae0a"
-              label="Waiting for players"
-            />
+            {tableType === "currentLobbies" ? (
+              <SGameStatusChip
+                background="#feec86"
+                customcolor="#caae0a"
+                label="Waiting for players"
+              />
+            ) : (
+              <SGameStatusChip
+                background="#e68f94"
+                customcolor="#d2363e"
+                label="Defeat"
+              />
+            )}
           </SLobbyTd>
         </tr>
         <tr>
@@ -104,11 +126,19 @@ export default function CurrentLobbies() {
             </SGameDiv>
           </SLobbyTd>
           <SLobbyTd>
-            <SGameStatusChip
-              background="#feec86"
-              customcolor="#caae0a"
-              label="Waiting for players"
-            />
+            {tableType === "currentLobbies" ? (
+              <SGameStatusChip
+                background="#feec86"
+                customcolor="#caae0a"
+                label="Waiting for players"
+              />
+            ) : (
+              <SGameStatusChip
+                background="#e68f94"
+                customcolor="#d2363e"
+                label="Defeat"
+              />
+            )}
           </SLobbyTd>
         </tr>
         <tr>
@@ -138,7 +168,9 @@ export default function CurrentLobbies() {
             <SGameStatusChip
               background="#a7e3bb"
               customcolor="#388c54"
-              label="Currently playing"
+              label={
+                tableType === "currentLobbies" ? "Currently playing" : "Victory"
+              }
             />
           </SLobbyTd>
         </tr>
@@ -169,7 +201,9 @@ export default function CurrentLobbies() {
             <SGameStatusChip
               background="#a7e3bb"
               customcolor="#388c54"
-              label="Currently playing"
+              label={
+                tableType === "currentLobbies" ? "Currently playing" : "Victory"
+              }
             />
           </SLobbyTd>
         </tr>
@@ -197,11 +231,19 @@ export default function CurrentLobbies() {
             </SGameDiv>
           </SLobbyTd>
           <SLobbyTd>
-            <SGameStatusChip
-              background="#afa7ed"
-              customcolor="#6050dc"
-              label="Finished"
-            />
+            {tableType === "currentLobbies" ? (
+              <SGameStatusChip
+                background="#afa7ed"
+                customcolor="#6050dc"
+                label="Finished"
+              />
+            ) : (
+              <SGameStatusChip
+                background="#a7e3bb"
+                customcolor="#388c54"
+                label="Victory"
+              />
+            )}
           </SLobbyTd>
         </tr>
       </tbody>
