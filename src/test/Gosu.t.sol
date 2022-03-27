@@ -33,6 +33,7 @@ contract ContractTest is DSTest, Gosu {
     function setUp() public {}
 
     function testCreateGame() public {
+        myGosu.register("mradolux");
         myGosu.createGame{value: 1}();
         (uint256 id, uint256 betAmount, address player, address opponent, uint256 dateOfGame, GameState state) = myGosu.games(myGosu.currentGame(address(this)));
         DSTest.assertTrue(id == 0);
@@ -45,15 +46,18 @@ contract ContractTest is DSTest, Gosu {
     }
 
     function testFailCreateTwoGame() public {
+        myGosu.register("mradolux");
         cheats.expectRevert("You already have an active game");
         myGosu.createGame{value: 5}();
         myGosu.createGame{value: 1}();
     }
 
     function testCreateAndJoinGame() public {
+        myGosu.register("mradolux");
         myGosu.createGame{value: 1}();
         address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).call{value: 1}("");
         cheats.startPrank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.register("TurcFort07");
         myGosu.joinGame{value: 1}(myGosu.currentGame(address(this)));
         cheats.stopPrank();
 
@@ -62,13 +66,15 @@ contract ContractTest is DSTest, Gosu {
     }
 
     function testCreateAndSetWinner() public {
+        myGosu.register("mradolux");
         myGosu.createGame{value: 1}();
         address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).call{value: 1}("");
         cheats.startPrank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.register("TurcFort07");
         myGosu.joinGame{value: 1}(myGosu.currentGame(address(this)));
         cheats.stopPrank();
 
-        myGosu.setWinner(0, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, address(this));
+        myGosu.setWinner(0, "TurcFort07", "mradolux");
         (,,,,, GameState state) = myGosu.games(myGosu.currentGame(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78));
         DSTest.assertTrue(state == GameState.OPPONENT_WIN);
         (,,,,,state) = myGosu.games(myGosu.currentGame(address(this)));
@@ -77,23 +83,66 @@ contract ContractTest is DSTest, Gosu {
     }
 
     function testCreateAndSetWinner2() public {
+        myGosu.register("mradolux");
         myGosu.createGame{value: 1}();
         address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).call{value: 1}("");
         cheats.startPrank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.register("TurcFort07");
         myGosu.joinGame{value: 1}(myGosu.currentGame(address(this)));
         cheats.stopPrank();
 
-        myGosu.setWinner(myGosu.currentGame(address(this)), address(this), 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.setWinner(myGosu.currentGame(address(this)), "mradolux", "TurcFort07");
         (,,,,, GameState state) = myGosu.games(myGosu.currentGame(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78));
         DSTest.assertTrue(state == GameState.PLAYER_WIN);
         (,,,,, state) = myGosu.games(myGosu.currentGame(address(this)));
         DSTest.assertTrue(state == GameState.PLAYER_WIN);
     }
 
+
+    function testCreateAndCancelGame() public {
+        myGosu.register("mradolux");
+        myGosu.createGame{value: 1}();
+        myGosu.cancelGame(myGosu.currentGame(address(this)));
+
+        (,,,,,GameState state) = myGosu.games(myGosu.currentGame(address(this)));
+        DSTest.assertTrue(state == GameState.CANCELED);
+        (,,, address opponent,,) = myGosu.games(myGosu.currentGame(address(this)));
+        DSTest.assertTrue(opponent == address(0));
+    }
+
+    function testFailCreateAndAnotherOneCancelGame() public {
+        myGosu.register("mradolux");
+        myGosu.createGame{value: 1}();
+        cheats.expectRevert("You're not the game creator");
+        uint gameindex = myGosu.currentGame(address(this));
+
+        cheats.startPrank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.register("TurcFort07");
+        myGosu.cancelGame(gameindex);
+        cheats.stopPrank();
+    }
+
+    function testFailCreateAndJoinGameAndCancelGame() public {
+        myGosu.register("mradolux");
+        myGosu.createGame{value: 1}();
+        
+        address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).call{value: 1}("");
+        cheats.startPrank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.register("TurcFort07");
+        myGosu.joinGame{value: 1}(myGosu.currentGame(address(this)));
+        cheats.stopPrank();
+
+        cheats.expectRevert("Someone already joined the game");
+        myGosu.cancelGame(myGosu.currentGame(address(this)));
+
+    }
+
     function testCreateAndTimeOver() public {
+        myGosu.register("mradolux");
         myGosu.createGame{value: 1}();
         address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).call{value: 1}("");
         cheats.startPrank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.register("TurcFort07");
         myGosu.joinGame{value: 1}(myGosu.currentGame(address(this)));
         cheats.stopPrank();
 
@@ -109,14 +158,17 @@ contract ContractTest is DSTest, Gosu {
     }
 
     function testClaim() public {
+        myGosu.register("mradolux");
+        DSTest.log_address(myGosu.tagToAddress("mradolux"));
         myGosu.createGame{value: 1}();
         address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).call{value: 1}("");
 
         cheats.startPrank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.register("TurcFort07");
         myGosu.joinGame{value: 1}(myGosu.currentGame(address(this)));
         cheats.stopPrank();
 
-        myGosu.setWinner(0, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, address(this));
+        myGosu.setWinner(0, "TurcFort07", "mradolux");
         uint balanceBefore = address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).balance;
         (, uint256 betAmount,,,,) = myGosu.games(myGosu.currentGame(address(this)));
 
@@ -127,14 +179,16 @@ contract ContractTest is DSTest, Gosu {
     }
 
     function testClaimDraw() public {
+        myGosu.register("mradolux");
         myGosu.createGame{value: 1}();
         address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).call{value: 1}("");
 
         cheats.startPrank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.register("TurcFort07");
         myGosu.joinGame{value: 1}(myGosu.currentGame(address(this)));
         cheats.stopPrank();
 
-        myGosu.setWinner(0, address(0), address(0));
+        myGosu.setWinner(0, "", "");
         uint balanceBefore = address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).balance;
         (, uint256 betAmount,,,,) = myGosu.games(myGosu.currentGame(address(this)));
         cheats.prank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
@@ -142,14 +196,38 @@ contract ContractTest is DSTest, Gosu {
         DSTest.assertTrue(balanceBefore + betAmount == address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).balance);
     }
 
+    // TODO: CHANGE L'ADRESSE QUI APPELLE LA FONCTION
+    function testClaimCanceledGame() public {
+
+        address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).call{value: 1}("");
+        cheats.startPrank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.register("TurcFort07");
+        myGosu.createGame();
+
+        uint balanceBefore = address(this).balance;
+        (, uint256 betAmount,,,,) = myGosu.games(myGosu.currentGame(address(this)));
+
+        myGosu.cancelGame(0);
+        myGosu.claim(0);
+        
+        DSTest.assertTrue(balanceBefore + betAmount == address(this).balance);
+
+        (,,,,,GameState state) = myGosu.games(myGosu.currentGame(address(this)));
+        DSTest.assertTrue(state == GameState.END);
+
+        cheats.stopPrank();
+    }
+
     function testStatsPlayersWinDefeat() public {
+        myGosu.register("mradolux");
         myGosu.createGame{value: 1}();
         address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).call{value: 1}("");
         cheats.startPrank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.register("TurcFort07");
         myGosu.joinGame{value: 1}(myGosu.currentGame(address(this)));
         cheats.stopPrank();
 
-        myGosu.setWinner(0, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, address(this));
+        myGosu.setWinner(0, "TurcFort07", "mradolux");
         (,,,,, GameState state) = myGosu.games(myGosu.currentGame(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78));
         DSTest.assertTrue(state == GameState.OPPONENT_WIN);
         (,,,,,state) = myGosu.games(myGosu.currentGame(address(this)));
@@ -168,14 +246,16 @@ contract ContractTest is DSTest, Gosu {
     }
 
     function testStatsPlayersDraw() public {
+        myGosu.register("mradolux");
         myGosu.createGame{value: 1}();
         address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).call{value: 1}("");
 
         cheats.startPrank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.register("TurcFort07");
         myGosu.joinGame{value: 1}(myGosu.currentGame(address(this)));
         cheats.stopPrank();
 
-        myGosu.setWinner(0, address(0), address(0));
+        myGosu.setWinner(0, "", "");
         
         (uint win, uint defeat, uint draw) = myGosu.statsPlayer(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
         DSTest.assertTrue(win == 0);
@@ -190,14 +270,16 @@ contract ContractTest is DSTest, Gosu {
     }
 
     function testStatsPlayers2Draw() public {
+        myGosu.register("mradolux");
         myGosu.createGame{value: 1}();
         address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).call{value: 1}("");
 
         cheats.startPrank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.register("TurcFort07");
         myGosu.joinGame{value: 1}(myGosu.currentGame(address(this)));
         cheats.stopPrank();
 
-        myGosu.setWinner(0, address(0), address(0));
+        myGosu.setWinner(0, "", "");
         
         (uint win, uint defeat, uint draw) = myGosu.statsPlayer(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
         DSTest.assertTrue(win == 0);
@@ -216,7 +298,7 @@ contract ContractTest is DSTest, Gosu {
         myGosu.joinGame{value: 1}(myGosu.currentGame(address(this)));
         cheats.stopPrank();
 
-        myGosu.setWinner(1, address(0), address(0));
+        myGosu.setWinner(1, "", "");
         
         (win, defeat, draw) = myGosu.statsPlayer(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
         DSTest.assertTrue(win == 0);
@@ -230,10 +312,12 @@ contract ContractTest is DSTest, Gosu {
     }
 
     function testStatsPlayerLimitTimeDraw() public {
+        myGosu.register("mradolux");
         myGosu.createGame{value: 1}();
         address(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78).call{value: 1}("");
 
         cheats.startPrank(0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78, 0x2044fB0BeD650B3771b7af0BB56dbf0A6f337b78);
+        myGosu.register("TurcFort07");
         myGosu.joinGame{value: 1}(myGosu.currentGame(address(this)));
         cheats.stopPrank();
 
@@ -251,8 +335,13 @@ contract ContractTest is DSTest, Gosu {
         DSTest.assertTrue(win == 0);
         DSTest.assertTrue(defeat == 0);
         DSTest.assertTrue(draw == 1);
-        
     }
+
+    
+
+    
+
+    
 
 
     

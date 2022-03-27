@@ -16,7 +16,7 @@ contract Gosu is Ownable {
     event Draw(address indexed p1, address indexed p2);
 
     enum GameState {
-        OFF,
+        CANCELED,
         PLAYER_WIN,
         OPPONENT_WIN,
         RUNNING,
@@ -42,7 +42,18 @@ contract Gosu is Ownable {
     mapping(uint256 => bool[2]) public hasClaimed; //0 is player and 1 opponent
     mapping(address => bool) public playedFirstGame;
     mapping(address => PlayerStat) public statsPlayer; // oublie pas de set les stats des joueurs dans la fonction setWinner et/ou quand ya un draw dans les autres fonctions
+    mapping(string => address) public tagToAddress;
+    mapping(address => string) public addressToTag;
     uint256 limitTime = 1800;
+
+
+    function register(string calldata playerTag) public {
+        require(tagToAddress[playerTag] == address(0), "player tag already assigned to an address");
+        require(keccak256(bytes(addressToTag[msg.sender])) == keccak256(bytes("")), "address already assigned to a player tag");
+        require(keccak256(bytes(playerTag)) != keccak256(bytes("")), "can't have a empty player tag");
+        tagToAddress[playerTag] = msg.sender;
+        addressToTag[msg.sender] = playerTag;
+    }
 
     function createGame() public payable {
         uint256 gameIndex = currentGame[msg.sender];
@@ -64,6 +75,15 @@ contract Gosu is Ownable {
         games.push(newGame);
         playedFirstGame[msg.sender] = true;
         currentGame[msg.sender] = games.length - 1;
+    }
+
+    function cancelGame(uint256 gameId) public {
+        Game storage game = games[gameId];
+        require(msg.sender == game.player, "You're not the game creator");
+        require(game.opponent == address(0), "Someone already joined the game");
+        require(game.state == GameState.RUNNING, "Game is not running");
+
+        game.state = GameState.CANCELED;
     }
 
     // join a game
@@ -96,7 +116,7 @@ contract Gosu is Ownable {
     }
 
     
-    function setWinner(uint256 gameId, address winner, address loser) public onlyOwner {
+    function setWinner(uint256 gameId, string calldata winner, string calldata loser) public onlyOwner {
         Game memory game = games[gameId]; 
         //set winner states
         require(game.state == GameState.RUNNING);
@@ -108,25 +128,25 @@ contract Gosu is Ownable {
             statsPlayer[games[gameId].opponent].draw += 1;
             emit Draw(games[gameId].player, games[gameId].opponent);
         }
-        else if (game.player == winner) {
+        else if (game.player == tagToAddress[winner]) {
             games[gameId].state = GameState.PLAYER_WIN;
             
             //set stats of each player
-            statsPlayer[winner].win += 1;
-            statsPlayer[loser].defeat += 1;
+            statsPlayer[tagToAddress[winner]].win += 1;
+            statsPlayer[tagToAddress[loser]].defeat += 1;
             //events for leaderboard
-            emit Win(winner);
-            emit Lost(loser);
+            emit Win(tagToAddress[winner]);
+            emit Lost(tagToAddress[loser]);
         }
-        else if (game.opponent == winner) {
+        else if (game.opponent == tagToAddress[winner]) {
             games[gameId].state = GameState.OPPONENT_WIN;
             
             //set stats of each player
-            statsPlayer[winner].win += 1;
-            statsPlayer[loser].defeat += 1;
+            statsPlayer[tagToAddress[winner]].win += 1;
+            statsPlayer[tagToAddress[loser]].defeat += 1;
             //events for leaderboard
-            emit Win(winner);
-            emit Lost(loser);
+            emit Win(tagToAddress[winner]);
+            emit Lost(tagToAddress[loser]);
         }
         else {
             games[gameId].state = GameState.DRAW;
@@ -166,6 +186,14 @@ contract Gosu is Ownable {
             if (msg.sender == game.opponent) {
                 uint amount = game.betAmount * 2;
                 (bool sent,) = msg.sender.call{value: amount}("");
+                require(sent, "Couldn't claim");
+                games[gameId].state = GameState.END;
+            }
+        }
+        else if (game.state == GameState.CANCELED) {
+            if (msg.sender == game.player) {
+                uint amount = game.betAmount;
+                (bool sent,) = payable(msg.sender).call{value: amount}("");
                 require(sent, "Couldn't claim");
                 games[gameId].state = GameState.END;
             }
