@@ -5,9 +5,9 @@
 // export const SUPPORTED_CHAIN_NAME = "Avalanche Network";
 
 // TESTNET
-export const RPC_URL = "https://api.avax-test.network/ext/bc/C/rpc";
-export const SUPPORTED_CHAIN_ID = 0xa869;
-export const SUPPORTED_CHAIN_ID_STRING = "0xa869";
-export const SUPPORTED_CHAIN_NAME = "Avalanche Fuji Network";
+export const RPC_URL = "https://api-wagmi.avax-test.network/rpc";
+export const SUPPORTED_CHAIN_ID = 0x2b67;
+export const SUPPORTED_CHAIN_ID_STRING = "0x2b67";
+export const SUPPORTED_CHAIN_NAME = "WAGMI";
 
-export const CONTRACT_ADDRESS = "0x0bC52193F3b34abCC05b8b2C21c360d19675c9c5";
+export const CONTRACT_ADDRESS = "0xcb7990A859550c3876716D1F9a29B18A60be0789";
