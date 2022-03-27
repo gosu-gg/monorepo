@@ -1,0 +1,13 @@
+diff --git a/node_modules/@coinbase/wallet-sdk/dist/index.d.ts b/node_modules/@coinbase/wallet-sdk/dist/index.d.ts
+index d66d6ee..a5ac1e6 100644
+--- a/node_modules/@coinbase/wallet-sdk/dist/index.d.ts
++++ b/node_modules/@coinbase/wallet-sdk/dist/index.d.ts
+@@ -7,7 +7,7 @@ declare global {
+     interface Window {
+         CoinbaseWalletSDK: typeof CoinbaseWalletSDK;
+         CoinbaseWalletProvider: typeof CoinbaseWalletProvider;
+-        ethereum?: CoinbaseWalletProvider;
++        ethereum: any | undefined;
+         coinbaseWalletExtension?: CoinbaseWalletProvider;
+         WalletLink: typeof CoinbaseWalletSDK;
+         WalletLinkProvider: typeof CoinbaseWalletProvider;
