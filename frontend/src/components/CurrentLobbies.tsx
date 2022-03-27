@@ -8,175 +8,203 @@ import AvaxLogo from "../../assets/avalanche-avax-logo.png";
 export default function CurrentLobbies() {
   return (
     <SLobbiesTable>
-      <tr>
-        <SLobbyHeader>Game</SLobbyHeader>
-        <SLobbyHeader>Player 1</SLobbyHeader>
-        <SLobbyHeader>Player 2</SLobbyHeader>
-        <SLobbyHeader>Bet Amount</SLobbyHeader>
-        <SLobbyHeader>Status</SLobbyHeader>
-      </tr>
-      <tr>
-        <SLobbyTd>
-          <SGameDiv>
-            <SLogo src={ClashRoyaleLogo} />
-            <p>Clash Royale</p>
-          </SGameDiv>
-        </SLobbyTd>
-        <SLobbyTd>
-          {walletAddressShortener("0x553411c3597c52BBF4e18521F6f2FfE7e48ca1e1")}
-        </SLobbyTd>
-        <SLobbyTd>
-          {walletAddressShortener("0x31cc282cC1865557246909c760BE7C51B568422D")}
-        </SLobbyTd>
-        <SLobbyTd>
-          <SGameDiv>
-            <p>1 AVAX</p>
-            <SLogo src={AvaxLogo} />
-          </SGameDiv>
-        </SLobbyTd>
-        <SLobbyTd color="#FDDA0D">
-          <SGameStatusChip
-            background="#feec86"
-            customColor="#caae0a"
-            label="Waiting for players"
-          />
-        </SLobbyTd>
-      </tr>
-      <tr>
-        <SLobbyTd>
-          <SGameDiv>
-            <SLogo src={ClashRoyaleLogo} />
-            <p>Clash Royale</p>
-          </SGameDiv>
-        </SLobbyTd>
-        <SLobbyTd>
-          {walletAddressShortener("0x553411c3597c52BBF4e18521F6f2FfE7e48ca1e1")}
-        </SLobbyTd>
-        <SLobbyTd>
-          {walletAddressShortener("0x31cc282cC1865557246909c760BE7C51B568422D")}
-        </SLobbyTd>
-        <SLobbyTd>
-          <SGameDiv>
-            <p>1 AVAX</p>
-            <SLogo src={AvaxLogo} />
-          </SGameDiv>
-        </SLobbyTd>
-        <SLobbyTd>
-          <SGameStatusChip
-            background="#feec86"
-            customColor="#caae0a"
-            label="Waiting for players"
-          />
-        </SLobbyTd>
-      </tr>
-      <tr>
-        <SLobbyTd>
-          <SGameDiv>
-            <SLogo src={ClashRoyaleLogo} />
-            <p>Clash Royale</p>
-          </SGameDiv>
-        </SLobbyTd>
-        <SLobbyTd>
-          {walletAddressShortener("0x553411c3597c52BBF4e18521F6f2FfE7e48ca1e1")}
-        </SLobbyTd>
-        <SLobbyTd>
-          {walletAddressShortener("0x31cc282cC1865557246909c760BE7C51B568422D")}
-        </SLobbyTd>
-        <SLobbyTd>
-          <SGameDiv>
-            <p>1 AVAX</p>
-            <SLogo src={AvaxLogo} />
-          </SGameDiv>
-        </SLobbyTd>
-        <SLobbyTd>
-          <SGameStatusChip
-            background="#feec86"
-            customColor="#caae0a"
-            label="Waiting for players"
-          />
-        </SLobbyTd>
-      </tr>
-      <tr>
-        <SLobbyTd>
-          <SGameDiv>
-            <SLogo src={ClashRoyaleLogo} />
-            <p>Clash Royale</p>
-          </SGameDiv>
-        </SLobbyTd>
-        <SLobbyTd>
-          {walletAddressShortener("0x553411c3597c52BBF4e18521F6f2FfE7e48ca1e1")}
-        </SLobbyTd>
-        <SLobbyTd>
-          {walletAddressShortener("0x31cc282cC1865557246909c760BE7C51B568422D")}
-        </SLobbyTd>
-        <SLobbyTd>
-          <SGameDiv>
-            <p>1 AVAX</p>
-            <SLogo src={AvaxLogo} />
-          </SGameDiv>
-        </SLobbyTd>
-        <SLobbyTd color="#50C878">
-          <SGameStatusChip
-            background="#a7e3bb"
-            customColor="#388c54"
-            label="Currently playing"
-          />
-        </SLobbyTd>
-      </tr>
-      <tr>
-        <SLobbyTd>
-          <SGameDiv>
-            <SLogo src={ClashRoyaleLogo} />
-            <p>Clash Royale</p>
-          </SGameDiv>
-        </SLobbyTd>
-        <SLobbyTd>
-          {walletAddressShortener("0x553411c3597c52BBF4e18521F6f2FfE7e48ca1e1")}
-        </SLobbyTd>
-        <SLobbyTd>
-          {walletAddressShortener("0x31cc282cC1865557246909c760BE7C51B568422D")}
-        </SLobbyTd>
-        <SLobbyTd>
-          <SGameDiv>
-            <p>1 AVAX</p>
-            <SLogo src={AvaxLogo} />
-          </SGameDiv>
-        </SLobbyTd>
-        <SLobbyTd>
-          <SGameStatusChip
-            background="#a7e3bb"
-            customColor="#388c54"
-            label="Currently playing"
-          />
-        </SLobbyTd>
-      </tr>
-      <tr>
-        <SLobbyTd>
-          <SGameDiv>
-            <SLogo src={ClashRoyaleLogo} />
-            <p>Clash Royale</p>
-          </SGameDiv>
-        </SLobbyTd>
-        <SLobbyTd>
-          {walletAddressShortener("0x553411c3597c52BBF4e18521F6f2FfE7e48ca1e1")}
-        </SLobbyTd>
-        <SLobbyTd>
-          {walletAddressShortener("0x31cc282cC1865557246909c760BE7C51B568422D")}
-        </SLobbyTd>
-        <SLobbyTd>
-          <SGameDiv>
-            <p>1 AVAX</p>
-            <SLogo src={AvaxLogo} />
-          </SGameDiv>
-        </SLobbyTd>
-        <SLobbyTd>
-          <SGameStatusChip
-            background="#afa7ed"
-            customColor="#6050dc"
-            label="Finished"
-          />
-        </SLobbyTd>
-      </tr>
+      <thead>
+        <tr>
+          <SLobbyHeader>Game</SLobbyHeader>
+          <SLobbyHeader>Player 1</SLobbyHeader>
+          <SLobbyHeader>Player 2</SLobbyHeader>
+          <SLobbyHeader>Bet Amount</SLobbyHeader>
+          <SLobbyHeader>Status</SLobbyHeader>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <SLobbyTd>
+            <SGameDiv>
+              <SLogo src={ClashRoyaleLogo} />
+              <p>Clash Royale</p>
+            </SGameDiv>
+          </SLobbyTd>
+          <SLobbyTd>
+            {walletAddressShortener(
+              "0x553411c3597c52BBF4e18521F6f2FfE7e48ca1e1"
+            )}
+          </SLobbyTd>
+          <SLobbyTd>
+            {walletAddressShortener(
+              "0x31cc282cC1865557246909c760BE7C51B568422D"
+            )}
+          </SLobbyTd>
+          <SLobbyTd>
+            <SGameDiv>
+              <p>1 WGM</p>
+              <SLogo src={AvaxLogo} />
+            </SGameDiv>
+          </SLobbyTd>
+          <SLobbyTd color="#FDDA0D">
+            <SGameStatusChip
+              background="#feec86"
+              customcolor="#caae0a"
+              label="Waiting for players"
+            />
+          </SLobbyTd>
+        </tr>
+        <tr>
+          <SLobbyTd>
+            <SGameDiv>
+              <SLogo src={ClashRoyaleLogo} />
+              <p>Clash Royale</p>
+            </SGameDiv>
+          </SLobbyTd>
+          <SLobbyTd>
+            {walletAddressShortener(
+              "0x553411c3597c52BBF4e18521F6f2FfE7e48ca1e1"
+            )}
+          </SLobbyTd>
+          <SLobbyTd>
+            {walletAddressShortener(
+              "0x31cc282cC1865557246909c760BE7C51B568422D"
+            )}
+          </SLobbyTd>
+          <SLobbyTd>
+            <SGameDiv>
+              <p>1 WGM</p>
+              <SLogo src={AvaxLogo} />
+            </SGameDiv>
+          </SLobbyTd>
+          <SLobbyTd>
+            <SGameStatusChip
+              background="#feec86"
+              customcolor="#caae0a"
+              label="Waiting for players"
+            />
+          </SLobbyTd>
+        </tr>
+        <tr>
+          <SLobbyTd>
+            <SGameDiv>
+              <SLogo src={ClashRoyaleLogo} />
+              <p>Clash Royale</p>
+            </SGameDiv>
+          </SLobbyTd>
+          <SLobbyTd>
+            {walletAddressShortener(
+              "0x553411c3597c52BBF4e18521F6f2FfE7e48ca1e1"
+            )}
+          </SLobbyTd>
+          <SLobbyTd>
+            {walletAddressShortener(
+              "0x31cc282cC1865557246909c760BE7C51B568422D"
+            )}
+          </SLobbyTd>
+          <SLobbyTd>
+            <SGameDiv>
+              <p>1 WGM</p>
+              <SLogo src={AvaxLogo} />
+            </SGameDiv>
+          </SLobbyTd>
+          <SLobbyTd>
+            <SGameStatusChip
+              background="#feec86"
+              customcolor="#caae0a"
+              label="Waiting for players"
+            />
+          </SLobbyTd>
+        </tr>
+        <tr>
+          <SLobbyTd>
+            <SGameDiv>
+              <SLogo src={ClashRoyaleLogo} />
+              <p>Clash Royale</p>
+            </SGameDiv>
+          </SLobbyTd>
+          <SLobbyTd>
+            {walletAddressShortener(
+              "0x553411c3597c52BBF4e18521F6f2FfE7e48ca1e1"
+            )}
+          </SLobbyTd>
+          <SLobbyTd>
+            {walletAddressShortener(
+              "0x31cc282cC1865557246909c760BE7C51B568422D"
+            )}
+          </SLobbyTd>
+          <SLobbyTd>
+            <SGameDiv>
+              <p>1 WGM</p>
+              <SLogo src={AvaxLogo} />
+            </SGameDiv>
+          </SLobbyTd>
+          <SLobbyTd color="#50C878">
+            <SGameStatusChip
+              background="#a7e3bb"
+              customcolor="#388c54"
+              label="Currently playing"
+            />
+          </SLobbyTd>
+        </tr>
+        <tr>
+          <SLobbyTd>
+            <SGameDiv>
+              <SLogo src={ClashRoyaleLogo} />
+              <p>Clash Royale</p>
+            </SGameDiv>
+          </SLobbyTd>
+          <SLobbyTd>
+            {walletAddressShortener(
+              "0x553411c3597c52BBF4e18521F6f2FfE7e48ca1e1"
+            )}
+          </SLobbyTd>
+          <SLobbyTd>
+            {walletAddressShortener(
+              "0x31cc282cC1865557246909c760BE7C51B568422D"
+            )}
+          </SLobbyTd>
+          <SLobbyTd>
+            <SGameDiv>
+              <p>1 WGM</p>
+              <SLogo src={AvaxLogo} />
+            </SGameDiv>
+          </SLobbyTd>
+          <SLobbyTd>
+            <SGameStatusChip
+              background="#a7e3bb"
+              customcolor="#388c54"
+              label="Currently playing"
+            />
+          </SLobbyTd>
+        </tr>
+        <tr>
+          <SLobbyTd>
+            <SGameDiv>
+              <SLogo src={ClashRoyaleLogo} />
+              <p>Clash Royale</p>
+            </SGameDiv>
+          </SLobbyTd>
+          <SLobbyTd>
+            {walletAddressShortener(
+              "0x553411c3597c52BBF4e18521F6f2FfE7e48ca1e1"
+            )}
+          </SLobbyTd>
+          <SLobbyTd>
+            {walletAddressShortener(
+              "0x31cc282cC1865557246909c760BE7C51B568422D"
+            )}
+          </SLobbyTd>
+          <SLobbyTd>
+            <SGameDiv>
+              <p>1 WGM</p>
+              <SLogo src={AvaxLogo} />
+            </SGameDiv>
+          </SLobbyTd>
+          <SLobbyTd>
+            <SGameStatusChip
+              background="#afa7ed"
+              customcolor="#6050dc"
+              label="Finished"
+            />
+          </SLobbyTd>
+        </tr>
+      </tbody>
     </SLobbiesTable>
   );
 }
@@ -203,11 +231,11 @@ const SLobbyTd = styled.td`
 
 const SGameStatusChip = styled(Chip)<{
   background: string;
-  customColor: string;
+  customcolor: string;
 }>`
   && {
     background-color: ${(props) => props.background};
-    color: ${(props) => props.customColor};
+    color: ${(props) => props.customcolor};
     font-family: inherit;
   }
 `;

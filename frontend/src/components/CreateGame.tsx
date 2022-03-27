@@ -1,12 +1,22 @@
+import * as React from "react";
 import styled from "styled-components";
 import { Button, IconButton, TextField } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
 
 import CoCBackgorund from "../../assets/coc_background.jpeg";
 import AvalancheLogo from "../../assets/avalanche-avax-logo.png";
+import Input from "./Input";
 
 export default function CreateGame() {
+  const [betValue, setBetValue] = React.useState("1");
+
+  const operationBetValue = (operation: "add" | "sub") => {
+    setBetValue((prev) => {
+      const currentValue = parseFloat(prev);
+      if (operation === "add") return `${(currentValue + 0.05).toFixed(2)}`;
+      return currentValue <= 0 ? "0.0" : `${(currentValue - 0.05).toFixed(2)}`;
+    });
+  };
+
   return (
     <SCreateGameContainer>
       <h2>Challenge someone</h2>
@@ -15,16 +25,18 @@ export default function CreateGame() {
         <SGameTitle>Clash Royale</SGameTitle>
       </SCOCOption>
       <SBetContainer>
-        <IconButton color="primary">
-          <RemoveIcon />
-        </IconButton>
-        <STextField variant="outlined" placeholder="0.0" />
-        <IconButton color="primary">
-          <AddIcon />
-        </IconButton>
+        <SBetInputContainer>
+          <SBetButton onClick={() => operationBetValue("sub")}>-</SBetButton>
+          <Input
+            placeholder="0.0"
+            value={betValue}
+            onChange={(event) => setBetValue(event.target.value)}
+          />
+          <SBetButton onClick={() => operationBetValue("add")}>+</SBetButton>
+        </SBetInputContainer>
         <SAvaxContainer>
           <SAvaxLogo src={AvalancheLogo} />
-          <h4>AVAX</h4>
+          <h4>WGM</h4>
         </SAvaxContainer>
       </SBetContainer>
       <SButton>CREATE GAME</SButton>
@@ -75,12 +87,22 @@ const SGameTitle = styled.h3`
 const SBetContainer = styled.div`
   display: flex;
   align-items: center;
+  gap: 1rem;
 `;
 
-const STextField = styled(TextField)`
-  && {
-    border-color: #6050dc;
-  }
+const SBetInputContainer = styled(SBetContainer)`
+  border-radius: 5px;
+  border: 2px solid #6050dc;
+  overflow: hidden;
+`;
+
+const SBetButton = styled.button`
+  height: 100%;
+  width: 2rem;
+  color: white;
+  background-color: #6050dc;
+  font-size: 20px;
+  padding: 0.3rem;
 `;
 
 const SButton = styled(Button)`
