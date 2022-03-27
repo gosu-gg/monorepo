@@ -17,18 +17,16 @@ export default async function setGameResult(gameId: number, playerTag1: string, 
 
   const battleLog = data.data;
   const lastBattleTime = moment(battleLog[battleLog.length - 1].battleTime);
-  const lastPossibleBattleTime = moment(timeStamp).add(30, 'minutes');
+  const lastPossibleBattleTime = moment.utc(timeStamp).add(30, 'minutes');
   if (lastBattleTime > lastPossibleBattleTime) {
     await setWinners(gameId, '', '');
     return {result: 'draw game'};
   }
 
   // eslint-disable-next-line
-  const game = battleLog.find((tmpGame: any) => { 
-    const now = moment();
-    const battleTime = moment(tmpGame.battleTime);
-    const playersInvolved = (tmpGame.team[0].name === playerTag1 ||  tmpGame.opponent[0].name  === playerTag1) && (tmpGame.team[0].name === playerTag2 ||  tmpGame.opponent[0].name  === playerTag2);
-    return now <= lastPossibleBattleTime && now > battleTime && playersInvolved;
+  const game = battleLog.find((tmpGame: any) => {
+    const playersInvolved = (tmpGame.team[0].tag === playerTag1 ||  tmpGame.opponent[0].tag  === playerTag1) && (tmpGame.team[0].tag === playerTag2 ||  tmpGame.opponent[0].tag  === playerTag2);
+    return playersInvolved;
   });
 
   if (!game) {

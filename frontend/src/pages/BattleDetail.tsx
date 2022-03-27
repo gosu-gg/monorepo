@@ -89,7 +89,7 @@ export default function BattleDetail() {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      method: "GET",
+      method: "POST",
       body: JSON.stringify({ gameId: parseInt(battleId || "") }),
     })
       .then((response) => response.text())
