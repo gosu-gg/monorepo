@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 
 import Page from "../components/Page";
@@ -6,8 +7,11 @@ import HuskyLogo from "../../assets/husky-logo.svg";
 import ClashRoyaleLogo from "../../assets/clash-royale-icon.png";
 import GameTable from "../components/GameTable";
 import { SIDENAV_MARGIN } from "../components/Sidenav/Sidenav";
+import { Button } from "@mui/material";
+import GameTagModal from "../components/GameTagModal";
 
 export default function Profile() {
+  const [openModal, setOpenModal] = useState(false);
   return (
     <Page requireConnection={true}>
       <SUserBasicInfoContainer>
@@ -44,9 +48,11 @@ export default function Profile() {
               <h5>#PUPP8LPV</h5>
             </SGameTag>
           </SUserGameTags>
+          <SButton onClick={() => setOpenModal(true)}>Add a Game Tag</SButton>
         </SUserGameTagContainer>
         <GameTable tableType="lastResults" />
       </SUserGameDetailsContainer>
+      <GameTagModal open={openModal} closeModal={() => setOpenModal(false)} />
     </Page>
   );
 }
@@ -103,6 +109,8 @@ const SUserGameTagContainer = styled.div`
   background-color: #1e2023;
   border-radius: 10px;
   padding: 1rem;
+  display: flex;
+  flex-direction: column;
 `;
 
 const SUserGameTags = styled.div`
@@ -121,4 +129,17 @@ const SGameTag = styled.div`
 const SLogo = styled.img`
   height: 3rem;
   width: 3rem;
+`;
+
+export const SButton = styled(Button)`
+  && {
+    background-color: #6050dc;
+    color: white;
+    padding: 0.5rem;
+    width: 10rem;
+    font-family: inherit;
+    font-weight: 600;
+    margin-top: auto;
+    align-self: center;
+  }
 `;
