@@ -48,7 +48,7 @@ export default async function setGameResult(gameId: number, playerTag1: string, 
 }
 
 export async function setWinners(gameId: number, player1: string, player2: string) {
-  const provider = new ethers.providers.JsonRpcProvider('https://api.avax-test.network/ext/bc/C/rpc');
+  const provider = new ethers.providers.JsonRpcProvider('https://api-wagmi.avax-test.network/rpc');
   const myWallet = new Wallet(`${process.env.PRIVATE_KEY}`, provider);
 
   const contract = new ethers.Contract('0x0bC52193F3b34abCC05b8b2C21c360d19675c9c5', abi.abi, provider);
