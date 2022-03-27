@@ -2,7 +2,7 @@ import express, { Express } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
-import getClashBattleLog from "./helpers";
+import setGameResult, { getGameFromContract, setWinners } from "./helpers";
 
 dotenv.config();
 
@@ -19,7 +19,12 @@ app.get("/", (_, res) => {
   res.send("App is running");
 });
 
-app.get("/battle-result", async (_, res) => {
-  const data = await getClashBattleLog("%23PUPP8LPV");
-  res.send(data);
+app.get("/battle-result", async (req, res) => {
+  const gameId = req.body.gameId;
+  const gameData = await getGameFromContract(gameId);
+  if (!gameData)  {
+    res.send({error: 'Error fetching game from smart contract'});
+  }
+  const response = await setGameResult(gameData.gameId,gameData.player1, gameData.player2, gameData.timeStamp);
+  res.send(response);
 });
