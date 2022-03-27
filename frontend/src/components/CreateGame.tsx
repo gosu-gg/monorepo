@@ -5,6 +5,7 @@ import { Button, IconButton, TextField } from "@mui/material";
 import CoCBackgorund from "../../assets/coc_background.jpeg";
 import AvalancheLogo from "../../assets/avalanche-avax-logo.png";
 import Input from "./Input";
+import ConnectButtonWrapper from "./ConnectButtonWrapper";
 
 export default function CreateGame() {
   const [betValue, setBetValue] = React.useState("1");
@@ -39,7 +40,9 @@ export default function CreateGame() {
           <h4>WGM</h4>
         </SAvaxContainer>
       </SBetContainer>
-      <SButton>CREATE GAME</SButton>
+      <ConnectButtonWrapper action={() => console.log("CREATE GAME")}>
+        CREATE GAME
+      </ConnectButtonWrapper>
     </SCreateGameContainer>
   );
 }
@@ -105,7 +108,7 @@ const SBetButton = styled.button`
   padding: 0.3rem;
 `;
 
-const SButton = styled(Button)`
+export const SButton = styled(Button)`
   && {
     background-color: #6050dc;
     color: white;
