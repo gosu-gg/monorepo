@@ -11,7 +11,7 @@ export default function ConnectButton() {
   return !web3State.walletConnected ? (
     <SButton onClick={connectWallet}>Connect wallet</SButton>
   ) : !web3State.rightChainId ? (
-    <SButton onClick={switchToRightNetwork}>Switch to Avalanche</SButton>
+    <SButton onClick={switchToRightNetwork}>Switch to WAGMI</SButton>
   ) : (
     <AddressContainer>
       {walletAddressShortener(web3State.address)}{" "}
