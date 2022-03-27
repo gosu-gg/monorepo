@@ -4,7 +4,6 @@ import styled from "styled-components";
 
 import { walletAddressShortener } from "../helpers/helpers";
 import { useWeb3 } from "../hooks";
-import { SIDENAV_MARGIN } from "./Sidenav/Sidenav";
 
 export default function ConnectButton() {
   const { connectWallet, switchToRightNetwork, web3State } = useWeb3();
@@ -22,7 +21,9 @@ export default function ConnectButton() {
 
 const SButton = styled(Button)`
   && {
-    margin-bottom: ${SIDENAV_MARGIN}rem;
+    place-self: flex-end;
+    align-self: flex-start;
+    grid-area: connect;
     background-color: #6050dc;
     color: white;
     padding: 0.5rem;
@@ -33,6 +34,7 @@ const SButton = styled(Button)`
 `;
 
 const AddressContainer = styled.div`
+  grid-area: connect;
   border-radius: 4px;
   font-size: 0.875rem;
   line-height: 1.75;
@@ -40,7 +42,6 @@ const AddressContainer = styled.div`
 
   display: grid;
   place-items: center;
-  margin-bottom: 1rem;
   background-color: #6050dc;
   color: white;
   padding: 0.5rem;

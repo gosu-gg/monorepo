@@ -14,11 +14,6 @@ export default function Page(props: Props) {
 
   return (
     <SPageContainer>
-      <div
-        style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}
-      >
-        <ConnectButton />
-      </div>
       {connected ? (
         children
       ) : (
@@ -33,8 +28,9 @@ export default function Page(props: Props) {
 }
 
 const SPageContainer = styled.main`
-  padding: ${SIDENAV_MARGIN}rem ${SIDENAV_MARGIN}rem ${SIDENAV_MARGIN}rem
-    ${SIDENAV_MARGIN + 5.885}rem;
+  grid-area: page;
+  /* padding: ${SIDENAV_MARGIN}rem ${SIDENAV_MARGIN}rem ${SIDENAV_MARGIN}rem
+    ${SIDENAV_MARGIN + 5.885}rem; */
 `;
 
 const NotConnectedContainer = styled.div`

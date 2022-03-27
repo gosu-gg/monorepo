@@ -72,12 +72,13 @@ export default function Sidenav() {
 }
 
 const SidenavContainer = styled.div`
-  position: fixed;
+  grid-area: sidenav;
+  /* position: fixed; */
   padding: 0.8rem;
   background-color: #1e2023;
-  top: 5rem;
-  left: ${SIDENAV_MARGIN}rem;
-  bottom: ${SIDENAV_MARGIN}rem;
+  /* top: 5rem; */
+  /* left: ${SIDENAV_MARGIN}rem; */
+  /* bottom: ${SIDENAV_MARGIN}rem; */
   border-radius: 10px;
 `;
 
