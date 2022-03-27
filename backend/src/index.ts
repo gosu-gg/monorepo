@@ -9,7 +9,7 @@ dotenv.config();
 const app: Express = express();
 const port = process.env.PORT || 8080;
 
-const corsOptions = process.env.NODE_ENV === 'production' ? {} : { origin: "*" };
+const corsOptions = process.env.NODE_ENV === 'production' ? {origin: "https://gosu-gg.netlify.app"} : { origin: "*" };
 
 app.use(cors(corsOptions), helmet(), express.json());
 app.listen(port, () => console.log(`it's alive on http://localhost:${port}`));

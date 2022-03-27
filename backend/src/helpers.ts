@@ -66,7 +66,7 @@ export async function setWinners(gameId: number, player1: string, player2: strin
 
 export async function getGameFromContract(gameId: number) {
   const provider = new ethers.providers.JsonRpcProvider('https://api.avax-test.network/ext/bc/C/rpc');
-  const contract = new ethers.Contract('0x0bC52193F3b34abCC05b8b2C21c360d19675c9c5', abi.abi, provider);
+  const contract = new ethers.Contract('0xcb7990A859550c3876716D1F9a29B18A60be0789', abi.abi, provider);
 
   try {
     const game =  await contract.games(gameId);
