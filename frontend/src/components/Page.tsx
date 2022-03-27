@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useWeb3 } from "../hooks";
+import ConnectButton from "./ConnectButton";
 import { SIDENAV_MARGIN } from "./Sidenav/Sidenav";
 
 type Props = { children?: React.ReactNode; requireConnection: boolean };
@@ -13,6 +14,11 @@ export default function Page(props: Props) {
 
   return (
     <SPageContainer>
+      <div
+        style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}
+      >
+        <ConnectButton />
+      </div>
       {connected ? (
         children
       ) : (
@@ -20,7 +26,6 @@ export default function Page(props: Props) {
           <NotConnectedTitle>
             You need to connect your wallet to enjoy the GOSU experience !
           </NotConnectedTitle>
-          <button onClick={connectWallet}>Connect</button>
         </NotConnectedContainer>
       )}
     </SPageContainer>

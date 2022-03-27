@@ -6,7 +6,7 @@ import CurrentLobbies from "../components/CurrentLobbies";
 
 export default function Battle() {
   return (
-    <Page requireConnection={true}>
+    <Page requireConnection={false}>
       <SPageContainer>
         <SLeftContainer>
           <CreateGame />
