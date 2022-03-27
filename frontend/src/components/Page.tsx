@@ -1,12 +1,15 @@
 import React from "react";
 import styled from "styled-components";
+import { useWeb3 } from "../hooks";
 import { SIDENAV_MARGIN } from "./Sidenav/Sidenav";
 
 type Props = { children?: React.ReactNode; requireConnection: boolean };
 
 export default function Page(props: Props) {
   const { children, requireConnection } = props;
-  const connected = requireConnection ? true : true;
+  const { web3State, connectWallet } = useWeb3();
+
+  const connected = requireConnection ? web3State.walletConnected : true;
 
   return (
     <SPageContainer>
@@ -17,6 +20,7 @@ export default function Page(props: Props) {
           <NotConnectedTitle>
             You need to connect your wallet to enjoy the GOSU experience !
           </NotConnectedTitle>
+          <button onClick={connectWallet}>Connect</button>
         </NotConnectedContainer>
       )}
     </SPageContainer>
