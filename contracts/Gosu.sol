@@ -43,6 +43,10 @@ contract Gosu is Ownable {
     mapping(address => string) public addressToTag;
     uint256 limitTime = 1800;
 
+    function getGamesLength() public returns(uint256) {
+        return games.length;
+    }
+
     function register(string calldata playerTag) public {
         require(
             tagToAddress[playerTag] == address(0),
