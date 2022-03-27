@@ -94,8 +94,10 @@ export default function BattleDetail() {
     setLoading(false);
   };
 
+  const url = process.env.NODE_ENV === 'production' ? 'https://avalanche-summit.herokuapp.com/battle-result' : 'http://localhost:8080/battle-result' ;
+
   const finishGame = async () => {
-    fetch("http://localhost:8080/battle-result", {
+    fetch(url, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
