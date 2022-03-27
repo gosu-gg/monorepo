@@ -24,7 +24,7 @@ export default async function setGameResult(gameId: number, playerTag1: string, 
   }
 
   // eslint-disable-next-line
-  const game = battleLog.find((tmpGame) => { 
+  const game = battleLog.find((tmpGame: any) => { 
     const now = moment();
     const battleTime = moment(tmpGame.battleTime);
     const playersInvolved = (tmpGame.team[0].name === playerTag1 ||  tmpGame.opponent[0].name  === playerTag1) && (tmpGame.team[0].name === playerTag2 ||  tmpGame.opponent[0].name  === playerTag2);
