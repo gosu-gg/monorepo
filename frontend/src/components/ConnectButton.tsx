@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import { walletAddressShortener } from "../helpers/helpers";
 import { useWeb3 } from "../hooks";
+import { SIDENAV_MARGIN } from "./Sidenav/Sidenav";
 
 export default function ConnectButton() {
   const { connectWallet, switchToRightNetwork, web3State } = useWeb3();
@@ -21,7 +22,7 @@ export default function ConnectButton() {
 
 const SButton = styled(Button)`
   && {
-    margin-bottom: 1rem;
+    margin-bottom: ${SIDENAV_MARGIN}rem;
     background-color: #6050dc;
     color: white;
     padding: 0.5rem;
