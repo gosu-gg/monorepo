@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Page from "../components/Page";
@@ -9,9 +9,64 @@ import GameTable from "../components/GameTable";
 import { SIDENAV_MARGIN } from "../components/Sidenav/Sidenav";
 import { Button } from "@mui/material";
 import GameTagModal from "../components/GameTagModal";
+import { useWeb3 } from "../hooks";
+import GosuAbi from "../utils/abi/gosu.json";
+import { CONTRACT_ADDRESS } from "../utils/chain_infos";
 
 export default function Profile() {
   const [openModal, setOpenModal] = useState(false);
+  const { web3State } = useWeb3();
+  const [gameTag, setGameTag] = useState("");
+  const [playerStats, setPlayerStats] = useState({
+    win: "0",
+    defeat: "0",
+    draw: "0",
+  });
+  const nbWin = parseInt(playerStats.win);
+  const nbLose = parseInt(playerStats.defeat);
+  const nbDraw = parseInt(playerStats.draw);
+  const nbGames = nbWin + nbLose + nbDraw;
+
+  const contract = new web3State.provider.eth.Contract(
+    // eslint-disable-next-line
+    GosuAbi.abi as any,
+    CONTRACT_ADDRESS
+  );
+
+  useEffect(() => {
+    if (!web3State.walletConnected || !web3State.rightChainId) return;
+    (async () => {
+      try {
+        const getGameTag = await contract.methods
+          .addressToTag(web3State.address)
+          .call();
+        setGameTag(getGameTag);
+
+        const statsPlayer = await contract.methods
+          .statsPlayer(web3State.address)
+          .call();
+        setPlayerStats(statsPlayer);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, [web3State]);
+
+  const addGameTag = async (gameTag: string) => {
+    if (!web3State.walletConnected || !web3State.rightChainId) return;
+    try {
+      await contract.methods.register(gameTag).send({
+        from: web3State.address,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  if (!web3State.walletConnected) {
+    return <Page requireConnection={true}></Page>;
+  }
+
   return (
     <Page requireConnection={true}>
       <SUserBasicInfoContainer>
@@ -21,20 +76,20 @@ export default function Profile() {
         <SUserDetailsContainer>
           <div>
             <h2>C-Chain Address</h2>
-            <p>0x553411c3597c52BBF4e18521F6f2FfE7e48ca1e1</p>
+            <p>{web3State.address}</p>
           </div>
           <SUserStatsContainer>
             <div>
               <h3># of Games</h3>
-              <p>50</p>
+              <p>{nbGames}</p>
             </div>
             <div>
               <h3># of Victories</h3>
-              <p>25</p>
+              <p>{playerStats.win}</p>
             </div>
             <div>
               <h3>Victory Ratio</h3>
-              <p>50%</p>
+              <p>{nbGames === 0 ? 0 : (nbWin / nbGames) * 100}%</p>
             </div>
           </SUserStatsContainer>
         </SUserDetailsContainer>
@@ -43,16 +98,22 @@ export default function Profile() {
         <SUserGameTagContainer>
           <h3>Game Tags</h3>
           <SUserGameTags>
-            <SGameTag>
-              <SLogo src={ClashRoyaleLogo} />
-              <h5>#PUPP8LPV</h5>
-            </SGameTag>
+            {gameTag.length > 0 ? (
+              <SGameTag>
+                <SLogo src={ClashRoyaleLogo} />
+                <h5>{gameTag}</h5>
+              </SGameTag>
+            ) : null}
           </SUserGameTags>
           <SButton onClick={() => setOpenModal(true)}>Add a Game Tag</SButton>
         </SUserGameTagContainer>
         <GameTable tableType="lastResults" />
       </SUserGameDetailsContainer>
-      <GameTagModal open={openModal} closeModal={() => setOpenModal(false)} />
+      <GameTagModal
+        open={openModal}
+        closeModal={() => setOpenModal(false)}
+        registerGameTag={addGameTag}
+      />
     </Page>
   );
 }

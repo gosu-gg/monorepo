@@ -7,13 +7,15 @@ import Input from "./Input";
 type Props = {
   open: boolean;
   closeModal: () => void;
+  registerGameTag: (gameTag: string) => void;
 };
 
 export default function GameTagModal(props: Props) {
-  const { open, closeModal } = props;
+  const { open, closeModal, registerGameTag } = props;
   const [gameTag, setGameTag] = React.useState("");
 
   const handleClose = () => {
+    registerGameTag(gameTag);
     closeModal();
   };
 
