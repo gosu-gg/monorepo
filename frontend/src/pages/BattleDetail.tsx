@@ -21,6 +21,8 @@ export default function BattleDetail() {
     player2: "",
     player1Status: "waiting" as "winner" | "loser" | "waiting",
     player2Status: "waiting" as "winner" | "loser" | "waiting",
+    player1Tag: "",
+    player2Tag: "",
     state: "",
   });
 
@@ -48,12 +50,21 @@ export default function BattleDetail() {
             ? "loser"
             : "waiting";
 
+        const player1Tag = await contract.methods
+          .addressToTag(game.player)
+          .call();
+        const player2Tag = await contract.methods
+          .addressToTag(game.opponent)
+          .call();
+
         setGameData({
           player1: game.player,
           player2: game.opponent,
           player1Status,
           player2Status,
           state: game.state,
+          player1Tag,
+          player2Tag,
         });
       } catch (error) {
         console.error(error);
@@ -103,11 +114,13 @@ export default function BattleDetail() {
           <BattleDetailUser
             address={gameData.player1}
             status={gameData.player1Status}
+            tag={gameData.player1Tag}
           />
           <span style={{ fontSize: "6rem" }}>VS</span>
           <BattleDetailUser
             address={gameData.player2}
             status={gameData.player2Status}
+            tag={gameData.player2Tag}
           />
         </SGameDataContainer>
 
@@ -149,6 +162,11 @@ export default function BattleDetail() {
               </SButton>
             </div>
           )}
+        <div
+          style={{ display: "grid", placeItems: "center", marginTop: "3rem" }}
+        >
+          Add your opponent's tag on the clash royale game and start a battle!
+        </div>
       </SContainer>
     </Page>
   );

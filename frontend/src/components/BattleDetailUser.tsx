@@ -5,10 +5,11 @@ import styled from "styled-components";
 type Props = {
   address: string | undefined;
   status: "winner" | "loser" | "waiting";
+  tag: string;
 };
 
 export default function BattleDetailUser(props: Props) {
-  const { address, status } = props;
+  const { address, status, tag } = props;
   return (
     <SUserContainer>
       {address ? (
@@ -32,6 +33,7 @@ export default function BattleDetailUser(props: Props) {
       <SAddressContainer>
         {address === undefined ? "0x0000000000" : address}
       </SAddressContainer>
+      <div>Clash Royale tag: {tag}</div>
       <SUserStatus>{status}</SUserStatus>
     </SUserContainer>
   );
