@@ -1,6 +1,8 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+
 import Sidenav from "./components/Sidenav/Sidenav";
+import { useWeb3 } from "./hooks";
 import Battle from "./pages/Battle";
 import Home from "./pages/Home";
 import Leaderboard from "./pages/Leaderboard";
