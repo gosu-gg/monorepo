@@ -46,6 +46,9 @@ contract Gosu is Ownable {
     mapping(address => string) public addressToTag;
     uint256 limitTime = 1800;
 
+    function getGamesLength() public returns(uint256) {
+        return games.length;
+    }
 
     function register(string calldata playerTag) public {
         require(tagToAddress[playerTag] == address(0), "player tag already assigned to an address");
@@ -56,6 +59,8 @@ contract Gosu is Ownable {
     }
 
     function createGame() public payable {
+        require(keccak256(bytes(addressToTag[msg.sender])) != keccak256(bytes("")), "You haven't registered your player tag");
+
         uint256 gameIndex = currentGame[msg.sender];
 
         //CHECK IF LAST GAME IS A DRAW BY LIMIT OF TIME
@@ -78,6 +83,7 @@ contract Gosu is Ownable {
     }
 
     function cancelGame(uint256 gameId) public {
+        require(keccak256(bytes(addressToTag[msg.sender])) != keccak256(bytes("")), "You haven't registered your player tag");
         Game storage game = games[gameId];
         require(msg.sender == game.player, "You're not the game creator");
         require(game.opponent == address(0), "Someone already joined the game");
@@ -88,6 +94,7 @@ contract Gosu is Ownable {
 
     // join a game
     function joinGame(uint256 gameId) public payable {
+        require(keccak256(bytes(addressToTag[msg.sender])) != keccak256(bytes("")), "You haven't registered your player tag");
         Game storage game = games[gameId];
         uint256 curGameP2 = currentGame[msg.sender];
 
@@ -158,6 +165,7 @@ contract Gosu is Ownable {
     }
 
     function claim(uint256 gameId) public {
+        require(keccak256(bytes(addressToTag[msg.sender])) != keccak256(bytes("")), "You haven't registered your player tag");
         Game memory game = games[gameId];
         if (game.state == GameState.DRAW) {
             if (game.player == msg.sender) {
